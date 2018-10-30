@@ -1,0 +1,55 @@
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git config --global user.name 'Your Name'[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'l'u'i's'p'i't't'a'[C
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git config --global user.email 'your@email.coom'||[K[K[1P'[1P'[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C' [K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P'
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'[1P'l'u'i's'p'i't't'a'.'m' [A]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Co''v'i'l'n'e't'@'g'm'a'i'l'.'c'o'm'
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git config --global credential.helper osxkeycchain
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git config --global credential.helper osxkeycchain
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git config --global credential.helper osxkeycchain[K[K[K[K[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K[K[K[K[KFraddi do01
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ vjf[K[K[Kv[Kgitc[K co[K[Kbrahcc[K[Kn[K[Kcn[Kh
+git: 'brach'no es un comando de git. Mira 'git --help'.
+
+El comando mas similar es
+	branch
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ gri[K[Kti[K[Kit branch
+fatal: no es un repositorio git (ni ninguno de los directorios superiores): .git
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git branch oringin
+fatal: no es un repositorio git (ni ninguno de los directorios superiores): .git
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git branch oringin[K[K[K[Kgin
+fatal: no es un repositorio git (ni ninguno de los directorios superiores): .git
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git remote add origin https://github.com/luispitta/trabajo-especial--de-grado.git
+fatal: no es un repositorio git (ni ninguno de los directorios superiores): .git
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git comii[K[Kmt[Kit
+fatal: no es un repositorio git (ni ninguno de los directorios superiores): .git
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ gitt[K add. [K[K .
+fatal: no es un repositorio git (ni ninguno de los directorios superiores): .git
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git init
+Inicializado repositorio Git vacío en /home/lpitta/Escritorio/Trabajo Especial de Grado/.git/
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git commit -m "first commit"[1Pt"[1Pt"[1Pt"[1Pt"[1Pt"[1Pt"[1P"[1Pt"[1Pt"[1Pt"[1Pt"ct"it"[C[1P"[1P"[1P"i"[1P"e"[1P"t"r"a"b"a"j"a"n"d"o" "e"n" "e"l" "c"d"i"g"o"[1P"[1P"[1P"[1P"d"i"g"o"[1P"[1P"[1P"[1P"d"i"g"[1P"[1P"[1P"o"d"i"g"o"[C
+En la rama master
+
+Confirmación inicial
+
+Archivos sin seguimiento:
+	[31m.RData[m
+	[31m.Rhistory[m
+	[31m.Rproj.user/[m
+	[31mBibliografia Utilizada/[m
+	[31mPaper.Rmd[m
+	[31mPaper.html[m
+	[31mPaper.log[m
+	[31mPaper.tex[m
+	[31mTesis de Prueba.Rmd[m
+	[31mTesis_de_Prueba.pdf[m
+	[31mTesis_de_Prueba_2.Rmd[m
+	[31mTesis_de_Prueba_2.html[m
+	[31mTesis_de_Prueba_2.log[m
+	[31mTesis_de_Prueba_2.tex[m
+	[31mTrabajo Especial de Grado.Rproj[m
+	[31mUntitled/[m
+	[31mdata/[m
+	[31mfaces.png[m
+	[31mtesis_code.R[m
+	[31mucvlogo.jpg[m
+
+no hay nada agregado para confirmar, pero hay archivos sin seguimiento presentes
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git com[K[K[Kadd. [K[K .

@@ -1,0 +1,839 @@
+---
+title: Predicción de primas de seguro a través de los modelos de Poisson compuestos
+  de Tweedie reforzados con árbol de gradiente
+output:
+  html_document: default
+  pdf_document: default
+author: Yi Yang Wei Qian y Hui Zou,
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+##Resumen 
+
+Tweedie GLM es un método ampliamente utilizado para predecir primas de seguros. Sin embargo, la estructura de la media logarítmica está restringida a una forma lineal en el GLM de Tweedie, que puede ser demasiado rígida para muchas aplicaciones. Como mejor alternativa, proponemos un algoritmo de aumento de árbol de gradiente y lo aplicamos a los modelos de Poisson de Tweedie compuestos para primas puras. Utilizamos un enfoque de probabilidad de perfil para estimar los parámetros de índice y dispersión. Nuestro método es capaz de ajustar un modelo flexible no lineal de Tweedie y capturar interacciones complejas entre predictores. Un estudio de simulación confirma el excelente rendimiento de predicción de nuestro método. Como una aplicación, aplicamos nuestro método a los datos de reclamos de seguros de automóviles y mostramos que el nuevo método es superior a los métodos existentes en el sentido de que genera predicciones de primas más precisas. Ayudando así a resolver el problema de selección adversa. Hemos implementado nuestro método en un paquete R fácil de usar que también incluye una buena herramienta de visualización para interpretar el modelo ajustado.
+
+
+##Introducción
+
+Uno de los problemas más importantes en el negocio de seguros es establecer la prima para los clientes (asegurados). En un mercado competitivo, es ventajoso para la aseguradora cobrar una prima justa de acuerdo con la pérdida esperada del asegurado. En el seguro de automóvil personal, por ejemplo, si una compañía de seguros cobra demasiado por los conductores antiguos y los de los conductores jóvenes, los conductores antiguos cambiarán a sus competidores, y las pólizas restantes para los conductores jóvenes tendrán un precio bajo. Esto da como resultado el problema de selección adversa (Dionne et al., 2001): la aseguradora pierde políticas rentables y se queda con malos riesgos, lo que resulta en pérdidas económicas en ambos sentidos. Para establecer adecuadamente las primas para los clientes de la aseguradora, una tarea crucial es predecir el tamaño de las reclamaciones reales (actualmente imprevisibles). En este documento, nos centraremos en modelar la pérdida de reclamaciones, aunque otros ingredientes como la carga de seguridad, los costos administrativos, el costo de capital y las ganancias también son factores importantes para establecer la prima. Una dificultad para modelar las afirmaciones es que la distribución suele ser muy sesgada a la derecha, mezclada con una masa puntual en cero. Este tipo de datos no se puede transformar en normalidad mediante la transformación del poder y, a menudo, se requiere un tratamiento especial en las reclamaciones cero. Como ejemplo, la Figura 1 muestra el histograma de los datos de un reclamo de seguro de automóvil (Yip y Yau, 2005), en el que hay 6, 290 registros de pólizas con cero reclamaciones y 4,006 registros de pólizas con pérdidas positivas. La necesidad de modelos predictivos surge del hecho de que la pérdida esperada depende en gran medida de las características de una póliza individual, como la antigüedad y los puntos de registro del vehículo motorizado del asegurado, la densidad de población del área residencial del asegurado y la edad y el modelo del vehículo. . Los métodos tradicionales utilizaron modelos lineales generalizados (GLM; Nelder y Wedderburn, 1972) para modelar el tamaño de la reclamación (por ejemplo, Renshaw, 1994; Haberman y Renshaw, 1996). Sin embargo, los autores de los artículos anteriores realizaron sus análisis en un subconjunto de las políticas, que tienen al menos una reclamación. Los enfoques alternativos han empleado los modelos de Tobit al tratar resultados cero como censurados debajo de algunos puntos de corte (Van de Ven y van Praag, 1981; Duchas 006 registros de pólizas con pérdidas positivas. La necesidad de modelos predictivos surge del hecho de que la pérdida esperada depende en gran medida de las características de una póliza individual, como la antigüedad y los puntos de registro del vehículo motorizado del asegurado, la densidad de población del área residencial del asegurado y la edad y el modelo del vehículo. . Los métodos tradicionales utilizaron modelos lineales generalizados (GLM; Nelder y Wedderburn, 1972) para modelar el tamaño de la reclamación (por ejemplo, Renshaw, 1994; Haberman y Renshaw, 1996). Sin embargo, los autores de los artículos anteriores realizaron sus análisis en un subconjunto de las políticas, que tienen al menos una reclamación. Los enfoques alternativos han empleado los modelos de Tobit al tratar resultados cero como censurados debajo de algunos puntos de corte (Van de Ven y van Praag, 1981; Duchas 006 registros de pólizas con pérdidas positivas. La necesidad de modelos predictivos surge del hecho de que la pérdida esperada depende en gran medida de las características de una póliza individual, como la antigüedad y los puntos de registro del vehículo motorizado del asegurado, la densidad de población del área residencial del asegurado y la edad y el modelo del vehículo. . Los métodos tradicionales utilizaron modelos lineales generalizados (GLM; Nelder y Wedderburn, 1972) para modelar el tamaño de la reclamación (por ejemplo, Renshaw, 1994; Haberman y Renshaw, 1996). Sin embargo, los autores de los artículos anteriores realizaron sus análisis en un subconjunto de las políticas, que tienen al menos una reclamación. Los enfoques alternativos han empleado los modelos de Tobit al tratar resultados cero como censurados debajo de algunos puntos de corte (Van de Ven y van Praag, 1981; Duchas La necesidad de modelos predictivos surge del hecho de que la pérdida esperada depende en gran medida de las características de una póliza individual, como la antigüedad y los puntos de registro del vehículo motorizado del asegurado, la densidad de población del área residencial del asegurado y la edad y el modelo del vehículo. . Los métodos tradicionales utilizaron modelos lineales generalizados (GLM; Nelder y Wedderburn, 1972) para modelar el tamaño de la reclamación (por ejemplo, Renshaw, 1994; Haberman y Renshaw, 1996). Sin embargo, los autores de los artículos anteriores realizaron sus análisis en un subconjunto de las políticas, que tienen al menos una reclamación. Los enfoques alternativos han empleado los modelos de Tobit al tratar resultados cero como censurados debajo de algunos puntos de corte (Van de Ven y van Praag, 1981; Duchas La necesidad de modelos predictivos surge del hecho de que la pérdida esperada depende en gran medida de las características de una póliza individual, como la antigüedad y los puntos de registro del vehículo motorizado del asegurado, la densidad de población del área residencial del asegurado y la edad y el modelo del vehículo. . Los métodos tradicionales utilizaron modelos lineales generalizados (GLM; Nelder y Wedderburn, 1972) para modelar el tamaño de la reclamación (por ejemplo, Renshaw, 1994; Haberman y Renshaw, 1996). Sin embargo, los autores de los artículos anteriores realizaron sus análisis en un subconjunto de las políticas, que tienen al menos una reclamación. Los enfoques alternativos han empleado los modelos de Tobit al tratar resultados cero como censurados debajo de algunos puntos de corte (Van de Ven y van Praag, 1981; Duchas Los métodos tradicionales utilizaron modelos lineales generalizados (GLM; Nelder y Wedderburn, 1972) para modelar el tamaño de la reclamación (por ejemplo, Renshaw, 1994; Haberman y Renshaw, 1996). Sin embargo, los autores de los artículos anteriores realizaron sus análisis en un subconjunto de las políticas, que tienen al menos una reclamación. Los enfoques alternativos han empleado los modelos de Tobit al tratar resultados cero como censurados debajo de algunos puntos de corte (Van de Ven y van Praag, 1981; Duchas Los métodos tradicionales utilizaron modelos lineales generalizados (GLM; Nelder y Wedderburn, 1972) para modelar el tamaño de la reclamación (por ejemplo, Renshaw, 1994; Haberman y Renshaw, 1996). Sin embargo, los autores de los artículos anteriores realizaron sus análisis en un subconjunto de las políticas, que tienen al menos una reclamación. Los enfoques alternativos han empleado los modelos de Tobit al tratar resultados cero como censurados debajo de algunos puntos de corte (Van de Ven y van Praag, 1981; Duchas y Shotick, 1994), pero estos enfoques se basan en un supuesto de normalidad de la respuesta latente. Alternativamente, Jørgensen y de Souza (1994) y Smyth y Jørgensen (2002) utilizaron GLM con un resultado distribuido de Tweedie para modelar simultáneamente la frecuencia y la severidad de las reclamaciones de seguros. Asumen la llegada de reclamos de Poisson y el monto distribuido gamma para reclamos individuales, de modo que el tamaño del monto total del reclamo sigue una distribución de Poisson compuesta de Tweedie. Debido a su capacidad para modelar simultáneamente los ceros y los resultados positivos continuos, Tweedie GLM ha sido un método ampliamente utilizado en estudios actuariales (Mildenhall, 1999; Murphy et al., 2000; Peters
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016 et al., 2008). A pesar de la popularidad de Tweedie GLM, una limitación importante es que la estructura de la media logarítmica está restringida a una forma lineal, que puede ser demasiado rígida para aplicaciones reales. En el seguro de automóviles, por ejemplo, se sabe que el riesgo no disminuye de manera monotónica a medida que aumenta la edad (Anstey et al., 2005). Aunque la no linealidad se puede modelar agregando splines (Zhang, 2011), las splines de bajo grado a menudo son inadecuadas para capturar la no linealidad en los datos, mientras que las splines de alto grado a menudo resultan en el problema de ajuste excesivo que produce estimaciones inestables. Los modelos de aditivos generalizados (GAM; Hastie y Tibshirani, 1990; Wood, 2006) superan la suposición lineal restrictiva de los GLM y pueden modelar las variables continuas mediante funciones suaves estimadas a partir de los datos. Sin embargo, la estructura del modelo debe determinarse a priori. Es decir, uno tiene que especificar los efectos principales y los efectos de interacción que se utilizarán en el modelo. Como resultado, es probable que la mala especificación de los efectos no ignorables afecte negativamente la precisión de la predicción. En este documento, nuestro objetivo es modelar el tamaño de la reclamación de seguros mediante un modelo de Poisson compuesto no paramétrico de Tweedie, y proponer un algoritmo de aumento de árbol de gradiente (TDboost en adelante) para que se ajuste a este modelo. También implementamos el método propuesto como un paquete R fácil de usar, que está disponible públicamente. El aumento de gradiente es uno de los algoritmos de aprendizaje automático más exitosos para la regresión y clasificación no paramétrica. Boosting adapta una gran cantidad de modelos de predicción relativamente simples llamados aprendices base en un aprendiz conjunto para lograr un alto rendimiento de predicción. uno tiene que especificar los efectos principales y los efectos de interacción que se utilizarán en el modelo. Como resultado, es probable que la mala especificación de los efectos no ignorables afecte negativamente la precisión de la predicción. En este documento, nuestro objetivo es modelar el tamaño de la reclamación de seguros mediante un modelo de Poisson compuesto no paramétrico de Tweedie, y proponer un algoritmo de aumento de árbol de gradiente (TDboost en adelante) para que se ajuste a este modelo. También implementamos el método propuesto como un paquete R fácil de usar, que está disponible públicamente. El aumento de gradiente es uno de los algoritmos de aprendizaje automático más exitosos para la regresión y clasificación no paramétrica. Boosting adapta una gran cantidad de modelos de predicción relativamente simples llamados aprendices base en un aprendiz conjunto para lograr un alto rendimiento de predicción. uno tiene que especificar los efectos principales y los efectos de interacción que se utilizarán en el modelo. Como resultado, es probable que la mala especificación de los efectos no ignorables afecte negativamente la precisión de la predicción. En este documento, nuestro objetivo es modelar el tamaño de la reclamación de seguros mediante un modelo de Poisson compuesto no paramétrico de Tweedie, y proponer un algoritmo de aumento de árbol de gradiente (TDboost en adelante) para que se ajuste a este modelo. También implementamos el método propuesto como un paquete R fácil de usar, que está disponible públicamente. El aumento de gradiente es uno de los algoritmos de aprendizaje automático más exitosos para la regresión y clasificación no paramétrica. Boosting adapta una gran cantidad de modelos de predicción relativamente simples llamados aprendices base en un aprendiz conjunto para lograr un alto rendimiento de predicción. La especificación errónea de efectos no ignorables puede afectar negativamente la precisión de la predicción. En este documento, nuestro objetivo es modelar el tamaño de la reclamación de seguros mediante un modelo de Poisson compuesto no paramétrico de Tweedie, y proponer un algoritmo de aumento de árbol de gradiente (TDboost en adelante) para que se ajuste a este modelo. También implementamos el método propuesto como un paquete R fácil de usar, que está disponible públicamente. El aumento de gradiente es uno de los algoritmos de aprendizaje automático más exitosos para la regresión y clasificación no paramétrica. Boosting adapta una gran cantidad de modelos de predicción relativamente simples llamados aprendices base en un aprendiz conjunto para lograr un alto rendimiento de predicción. La especificación errónea de efectos no ignorables puede afectar negativamente la precisión de la predicción. En este documento, nuestro objetivo es modelar el tamaño de la reclamación de seguros mediante un modelo de Poisson compuesto no paramétrico de Tweedie, y proponer un algoritmo de aumento de árbol de gradiente (TDboost en adelante) para que se ajuste a este modelo. También implementamos el método propuesto como un paquete R fácil de usar, que está disponible públicamente. El aumento de gradiente es uno de los algoritmos de aprendizaje automático más exitosos para la regresión y clasificación no paramétrica. Boosting adapta una gran cantidad de modelos de predicción relativamente simples llamados aprendices base en un aprendiz conjunto para lograr un alto rendimiento de predicción. y proponer un algoritmo de aumento de árbol de gradiente (TDboost a partir de ahora) para ajustar este modelo. También implementamos el método propuesto como un paquete R fácil de usar, que está disponible públicamente. El aumento de gradiente es uno de los algoritmos de aprendizaje automático más exitosos para la regresión y clasificación no paramétrica. Boosting adapta una gran cantidad de modelos de predicción relativamente simples llamados aprendices base en un aprendiz conjunto para lograr un alto rendimiento de predicción. y proponer un algoritmo de aumento de árbol de gradiente (TDboost a partir de ahora) para ajustar este modelo. También implementamos el método propuesto como un paquete R fácil de usar, que está disponible públicamente. El aumento de gradiente es uno de los algoritmos de aprendizaje automático más exitosos para la regresión y clasificación no paramétrica. Boosting adapta una gran cantidad de modelos de predicción relativamente simples llamados aprendices base en un aprendiz conjunto para lograr un alto rendimiento de predicción.
+
+
+3
+
+
+mance El trabajo seminal sobre el algoritmo de impulso llamado AdaBoost (Freund y Schapire, 1997) se propuso originalmente para problemas de clasificación. Más tarde, Breiman (1998) y Breiman (1999) señalaron una conexión importante entre el algoritmo de AdaBoost y un algoritmo de descenso de gradiente funcional. Friedman et al. (2000) y Hastie et al. (2009) desarrolló una visión estadística de los métodos de refuerzo y gradiente propuesto para la clasificación y la regresión. Hay una gran cantidad de literatura sobre el impulso. Referimos a los lectores interesados a B¨ hlmann y Hothorn (2007) u para una revisión exhaustiva de los algoritmos de impulso.
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+El modelo TDboost está motivado por el éxito comprobado de impulsar el aprendizaje automático para problemas de clasificación y regresión (Friedman, 2001, 2002; Hastie et al., 2009). Sus ventajas son triples. Primero, la estructura del modelo de TDboost se aprende de los datos y no se predetermina, evitando así una especificación explícita del modelo. Las no linealidades, discontinuidades, interacciones complejas y de orden superior se incorporan naturalmente al modelo para reducir el sesgo de modelado potencial y para producir un alto rendimiento predictivo, lo que permite a TDboost servir como un modelo de referencia en la calificación de pólizas de seguro, orientar las prácticas de fijación de precios y facilitar Esfuerzos de mercadeo. La selección de características se realiza como parte integral del procedimiento. Además, TDboost maneja las variables de predictor y respuesta de cualquier tipo sin la necesidad de transformación, y es muy robusto a los valores atípicos. Los valores faltantes en los predictores se manejan casi sin pérdida de información (Elith et al., 2008). Todas estas propiedades hacen de TDboost una herramienta más atractiva para el modelado de primas de seguros. Por otro lado, reconocemos que sus resultados no son tan sencillos como los del modelo Tweedie GLM. Sin embargo, TDboost no tiene que ser considerado como una caja negra. Puede proporcionar resultados interpretables, por medio de las parcelas de dependencia parcial, y la importancia relativa de los predictores. El resto de este documento está organizado de la siguiente manera. Revisamos brevemente el algoritmo de aumento de gradiente y el modelo de Poisson compuesto de Tweedie en la Sección 2 y la Sección 3, respectivamente. Presentamos el desarrollo metodológico principal con detalles de implementación en la Sección 4. En la Sección 5, Utilizamos la simulación para mostrar la alta precisión predictiva de TDboost. Como una aplicación, aplicamos
+
+
+4
+
+
+TDboost para analizar los datos de un reclamo de seguro de automóvil en la Sección 6.
+
+2
+
+Mejora de gradiente
+
+El aumento de gradiente (Friedman, 2001) es un algoritmo de aprendizaje automático no paramétrico recursivo que se ha utilizado con éxito en muchas áreas. Muestra una notable flexibilidad en la resolución de diferentes funciones de pérdida. Al combinar un gran número de aprendices base, puede manejar interacciones de orden superior
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+y producir formas funcionales altamente complejas. Proporciona una alta precisión de predicción y, a menudo, supera a muchos métodos competitivos, como regresión / clasificación lineal, embolsado (Breiman, 1996), splines y CART (Breiman et al., 1984). Para mantener el papel autocontenido, explicamos brevemente los procedimientos generales para el aumento de gradiente. Sea x = (x1, ..., xp) un vector de columna p-dimensional para las variables predictoras y y sea la variable de respuesta unidimensional. El objetivo es estimar la función de predicción óptima ~ F () que mapea x a y minimizando el valor esperado de una función de pérdida (,) sobre la clase de función F: ~ F () = arg minEy, x [(y, F (X))],
+F () F
+
+donde se supone que es diferenciable con respecto a F. Dados los datos observados {yi, xi} n, donde i = 1 ~ xi = (xi1, ..., xip), la estimación de F () se puede realizar minimizando el Función de riesgo empírico 1 min F () F n
+norte
+
+(yi, F (xi)).
+i = 1
+
+(1)
+
+Para el aumento de gradiente, se supone que cada función candidata FF es un conjunto de aprendices base M
+METRO
+
+F (x) = F
+
+[0]
+
++
+m = 1
+
+[m] h (x; [m]),
+
+(2)
+
+donde h (x; [m]) generalmente pertenece a una clase de algunas funciones simples de x llamados aprendices base (por ejemplo, regresión / árbol de decisión) con el parámetro [m] (m = 1, 2,, M). F [0] es un escalar constante y
+
+
+5
+
+
+[m] es el coeficiente de expansión. Tenga en cuenta que, a diferencia de la estructura habitual de un modelo aditivo, no hay restricciones en el número de predictores que se incluirán en cada h () y, por lo tanto, las interacciones de alto orden pueden considerarse fácilmente utilizando esta configuración. Se adopta un algoritmo escalonado avanzado para aproximar el minimizador de (1), que construye los componentes [m] h (x; [m]) (m = 1, 2, ..., M) secuencialmente a través de un gradiente de descenso -como ~ enfoque. En cada etapa de iteración m (m = 1, 2, ...), suponga que la estimación actual para F () es ^ ^ ^ F [m-1] (). Para actualizar la estimación de F [m-1] () a F [m] (), el aumento de gradiente se ajusta a un negativo
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+vector de gradiente (como la respuesta de trabajo) a los predictores utilizando un aprendiz base h (x; [m]). Este ajuste h (x; [m]) puede verse como una aproximación del gradiente negativo. Posteriormente, el coeficiente de expansión [m] se puede determinar mediante una minimización de búsqueda de línea con la función de riesgo empírica ~, y la estimación de F (x) para la siguiente etapa se convierte en ^ ^ F [m] (x): = F [ m-1] (x) + [m] h (x; [m]), (3)
+
+donde 0 <1 es el factor de contracción (Friedman, 2001) que controla el tamaño del paso de actualización. Un pequeño impone más contracción mientras que = 1 da pasos de gradiente negativo completos. Friedman (2001) descubrió que el factor de contracción reduce el ajuste excesivo y mejora la precisión predictiva.
+
+3
+
+Compuesto Poisson Distribución y Modelo Tweedie
+
+En los problemas de predicción de primas de seguros, el monto total de la reclamación para un riesgo cubierto generalmente tiene una distribución continua en valores positivos, excepto por la posibilidad de ser cero exacto cuando no se produce la reclamación. Un enfoque estándar en la ciencia actuarial en el modelado de estos datos es el uso de los modelos compuestos de Poisson de Tweedie, que presentamos brevemente en esta sección. ~ Sea N una variable aleatoria de Poisson indicada por Pois (), y las de Zd (d = 0, 1, ..., N) sean variables aleatorias iid gamma (,) con media y varianza 2. Supongamos que N es
+
+
+6
+
+
+~ independiente de Zd 's. Defina una variable aleatoria Z por 0 si N = 0. Z = ~ Z + Z + + Z ~ 2 ~ N si N = 1, 2,. . . 1
+
+(4)
+
+Por lo tanto, Z es la suma de Poisson de variables aleatorias gamma independientes. En las solicitudes de seguro, ~ se puede ver Z como el monto total de la reclamación, N como el número de reclamaciones reportadas y Zd como el
+
+Pago del seguro por el reclamo dth. La distribución resultante de Z se conoce como el compuesto
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Distribución de Poisson (Jørgensen y de Souza, 1994; Smyth y Jørgensen, 2002), que se sabe que está estrechamente relacionada con los modelos de dispersión exponencial (EDM) (Jørgensen, 1987). Tenga en cuenta que la distribución de Z tiene una masa de probabilidad en cero: Pr (Z = 0) = exp (-). Luego, basándose en que Z condicional en N = j es Gamma (j,), la función de distribución de Z se puede escribir como
+ j = 1
+
+fZ (z |,,) = Pr (N = 0) d0 (z) + = exp (-) d0 (z) +
+ j = 1
+
+Pr (N = j) fZ | N = j (z)
+
+ j e- z j-1 ez /, j! j (j)
+
+donde d0 es la función delta de Dirac en cero y fZ | N = j es la densidad condicional de Z dada N = j. Smyth (1996) señaló que la distribución de Poisson compuesta pertenece a una clase especial de EDM conocidos como modelos Tweedie (Tweedie, 1984), que se definen por la forma fZ (z |,) = a (z,) exp z - ( ), (5)
+
+donde a () es una función normalizadora, () se denomina función acumulativa, y tanto a () como () son conocidos. El parámetro está en R y el parámetro de dispersión está en R +. Para los modelos de Tweedie, la media E (Z) = () y la varianza Var (Z) = ¨ (), donde () y () son las primeras y segundas derivadas de (), respectivamente. Los modelos de Tweedie tienen la relación de poder media-varianza.
+
+
+7
+
+
+Var (Z) = para algún parámetro de índice. Dicha relación media-varianza da 1- 2-,, 1- 2- 1 2 =, () =. log, = 1 log, = 2 De hecho, si reparametrize (,,) por =
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+(6)
+
+Se puede demostrar que la distribución compuesta de Poisson pertenece a la clase de modelos Tweedie.
+
+1 2-, 2-
+
+=
+
+2-, -1
+
+ = (- 1) -1,
+
+(7)
+
+el modelo compuesto de Poisson tendrá la forma de un modelo Tweedie con 1 <<2 y> 0. Como resultado, para el resto de este documento, solo consideramos el modelo (4), y simplemente nos referimos a (4) como Modelo de Tweedie (o modelo de Poisson de Tweedie compuesto), denotado por Tw (,,), donde 1 <<2 y> 0. Es sencillo mostrar que la probabilidad de registro del modelo de Tweedie es log fZ (z |,,) = 2- 1 1- - + log a (z,,), z 1- 2- (8)
+
+donde la función de normalización a () se puede escribir como 1 zt zt = 1 Wt (z,,) = 1 (-1) tt (1+) (2-) tt! (t) t = 1 za (z,, ) = 1 y = (2 -) / (- 1) y
+ t = 1
+
+para z> 0 para z = 0
+
+,
+
+Wt es un ejemplo de la función Bessel generalizada de Wright (Tweedie,
+
+1984).
+
+4
+
+Nuestra propuesta
+
+En esta sección, proponemos integrar el modelo Tweedie al algoritmo de aumento de gradiente basado en árboles para predecir el tamaño de las reclamaciones de seguros. Específicamente, nuestra discusión se enfoca en modelar el seguro de automóvil personal como un ejemplo ilustrativo (ver la Sección 6 para un análisis de datos reales), ya que nuestra estrategia de modelado se extiende fácilmente a otras líneas de negocios de seguros no de vida.
+
+
+8
+
+
+Dada una póliza de seguro de automóvil i, sea Ni el número de reclamaciones (conocido como la frecuencia de reclamación) ~ y Zdi sea el tamaño de cada reclamación observada para di = 1,. . . , Ni. Dejemos que sea la duración de la política, es decir, el período de tiempo que la política permanece en vigor. Entonces Zi =
+Ni di = 1
+
+~ Zdi es el monto total de la reclamación.
+
+A continuación, nos interesa modelar la proporción entre la reclamación total y la duración Yi = Zi / wi, una cantidad clave conocida como la prima pura (Ohlsson y Johansson, 2010). Siguiendo la configuración del modelo de Poisson compuesto, asumimos que Ni está distribuido en Poisson, y su media i wi tiene una relación multiplicativa con la duración wi, donde i es una política específica
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+parámetro que representa la frecuencia de reclamación esperada en la duración de la unidad. Condicional a Ni, supongamos que las de Zdi (di = 1, ..., Ni) son iid Gamma (, i), donde i es un parámetro específico de la política que determina la gravedad de la reclamación, y es una constante. Además, asumimos que bajo la duración de la unidad (es decir, wi = 1), la relación media-varianza de una política satisface Var (Yi) = [E (Yi)] para todas las políticas, donde Yi es la prima pura en la duración de la unidad, es una constante, y = (+ 2) / (+ 1). Entonces, se sabe que Yi Tw (i, / wi,), cuyos detalles se proporcionan en el Apéndice Parte A. Luego, consideramos una cartera de pólizas {(yi, xi, wi)} n de n contratos de seguros independientes , i = 1 donde para el contrato i, yi es la prima pura de la póliza, xi es un vector de variables explicativas que caracterizan al asegurado y el riesgo que se está asegurando (por ejemplo, casa, vehículo), y wi es la duración. Supongamos que la prima pura esperada i está determinada por una función de predicción F: R p R de xi: log {i} = log {E (Yi | xi)} = F (xi). (9)
+
+En este documento, no imponemos una restricción lineal u otra forma paramétrica en F (). Dada la flexibilidad de F (), llamamos ajustes como el modelo Tweedie mejorado (en oposición al GLM de Tweedie). Dado {(yi, xi, wi)} n, la función log-verosimilitud se puede escribir como i = 1
+norte
+
+(F (),, | {yi, xi, wi} n) i = 1
+
+=
+i = 1 n
+
+log fY (yi | i, / wi,),
+1- 2- wi i yi - i + log a (yi, / wi,). 1- 2-
+
+=
+i = 1
+
+(10)
+
+
+9
+
+
+4.1 Estimación de F () a través de TDboost
+Estimamos la función de predicción F () integrando el modelo Tweedie reforzado en el algoritmo de aumento de gradiente basado en niveles. Para desarrollar la idea, asumimos eso y estamos dados por el momento. La estimación conjunta de F (), y será estudiada en la Sección 4.2. Dado y, reemplazamos la función objetivo general en (1) por la probabilidad de registro negativa derivada en (10), y seleccionamos la función minimizadora F () sobre una clase F de funciones básicas de aprendiz en la forma de (2). Es decir, pretendemos estimar.
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+norte
+
+F (x) = argmin -
+FF
+
+
+
+(F (),, | {yi, xi, wi} n) i = 1
+
+= argmin
+FF i = 1
+
+(yi, F (xi) |),
+
+(11)
+
+donde (yi, F (xi) |) = wi - yi exp [(1 -) F (xi)] exp [(2 -) F (xi)] +. 1- 2-
+
+Tenga en cuenta que, a diferencia de (11), la clase de función seleccionada por Tweedie GLM (Smyth, 1996) está restringida a una colección de funciones lineales de x. Proponemos aplicar el algoritmo escalonado avanzado descrito en la Sección 2 para resolver (11). La estimación inicial de F () se elige como una función constante que minimiza la probabilidad negativa de loglik:
+norte
+
+^ F [0] = argmin
+
+
+= log
+
+i = 1 ni = 1 wi yi ni = 1 wi
+
+(yi, |).
+
+^ Esto corresponde a la mejor estimación de F sin covariables. Sea F [m-1] la estimación actual antes de la iteración mth. En el paso mth, ajustamos un aprendiz base h (x; [m]) a través de
+[m] n
+
+= argmin
+ [m] i = 1
+
+[u [m] - h (xi; [m])] 2, i
+
+(12)
+
+
+10
+
+
+donde (u [m], ..., u [m]) es el gradiente negativo actual de (|), es decir, n 1 u [m] = - i (yi, F (xi) |) F (xi) (13) ^ exp [(2 -) F [m-1] (xi)], (14)
+
+= wi - yi exp [(1 -
+
+^ F (xi) = F [m-1] (xi) ^ [m-1] (xi)] +) F
+
+y usar un árbol de regresión del nodo L-terminal
+L
+
+h (x; [m]) =
+l = 1
+
+u [m] I (x R [m]) ll
+
+(15)
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+L con parámetros [m] = {R [m], u [m]} l = 1 como aprendiz base. Para encontrar R [m] yu [m], usamos un topl lll rápido
+
+algoritmo de "ajuste óptimo" con un criterio de división de mínimos cuadrados (Friedman et al., 2000) para encontrar las variables de división y las ubicaciones de división correspondientes que determinan las regiones terminales ajustadas
+L {R [m]} l = 1. Tenga en cuenta que estimar la R [m] implica estimar la u [m] como la media que cae en cada región: lll
+
+u [m] = meani: xi R [m] (u [m]) li
+l
+
+l = 1,. . . , L.
+
+Una vez que se ha estimado el aprendiz base h (x; [m]), el valor óptimo del coeficiente de expansión [m] se determina mediante una búsqueda por línea
+norte
+
+
+
+[metro]
+
+= argmin
+ i = 1 n
+
+^ (yi, F [m-1] (xi) + h (xi;) |)
+L
+
+[metro]
+
+(dieciséis)
+
+= argmin
+ i = 1
+
+^ (yi, F [m-1] (xi) + 
+l = 1
+
+u [m] I (xi R [m]) | ). ll
+
+El árbol de regresión (15) predice un valor constante u [m] dentro de cada región R [m], por lo que podemos resolver (16) ll mediante una búsqueda de línea separada realizada dentro de cada región respectiva R [m]. El problema (16) reduce l para encontrar la mejor constante [m] para mejorar la estimación actual en cada región R [m] según el siguiente criterio: [m] = argmin ^ l
+ i: xi R [m] l
+
+^ (yi, F [m-1] (xi) + |),
+
+l = 1,. . . L
+
+(17)
+
+
+11
+
+
+donde la solución está dada por [m] ^ l
+i: xi R [m] l
+
+= log
+
+^ wi yi exp [(1 -) F [m-1] (xi)] ^ wi exp [(2 -) F [m-1] (xi)]
+
+,
+
+l = 1,. . . , L.
+
+(18)
+
+i: xi R [m] l
+
+^ Habiendo encontrado los parámetros {[m]} l = 1, luego actualizamos la estimación actual F [m-1] (x) en cada ^ l L región correspondiente ^ ^ ^ l F [m] (x) = F [ m-1] (x) + [m] I (x R [m]), l
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+l = 1,. . . L
+
+(19)
+
+donde 0 <1 es el factor de contracción. A continuación (Friedman, 2001), establecimos = 0.005 en nuestra implementación. Más discusiones sobre la elección de los parámetros de ajuste están en la Sección 4.4. En resumen, el algoritmo completo de TDboost se muestra en el algoritmo 1. El paso de impulso es ^ repetido M veces y reportamos F [M] (x) como la estimación final.
+
+4.2 Estimación (,) a través de la probabilidad del perfil
+Siguiendo a Dunn y Smyth (2005), utilizamos la probabilidad de perfil para estimar la dispersión y el parámetro de índice, que determinan conjuntamente la relación de varianza de media Var (Yi) = / wi de la prima pura. Explotamos el hecho de que en los modelos de Tweedie la estimación de depende solo de: dado un fijo, la estimación media () se puede resolver en (11) sin saberlo. Luego, condicional a esto y al correspondiente (), maximizamos la función de probabilidad de registro con respecto a () = argmax ((),,),
+
+
+(20)
+
+que es un problema de optimización univariable que se puede resolver utilizando una combinación de búsqueda de sección dorada e interpolación parabólica sucesiva (Brent, 2013). De tal manera, hemos determinado el correspondiente ((), ()) para cada arreglo. Luego, adquirimos la estimación maximizando la probabilidad del perfil con respecto a 50 valores espaciados igualmente {1,. . . , 50} en (0, 1): = argmax
+{1, ..., 50}
+
+((), (),).
+
+(21)
+
+
+12
+
+
+
+Algoritmo 1 TDboost ^ 1. Inicializar F [0]
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+^ F [0] = log
+
+ni = 1 wi yi ni = 1 wi
+
+.
+
+2. Para m = 1,. . . , M repetidamente realiza los pasos 2. (a) 2. (d) 2. (a) Calcula el gradiente negativo (u [m], ..., u [m]) n 1 2. (b) Ajusta el gradiente negativo vector (u [m], ..., u [m]) a (x1, ..., xn) mediante un árbol de regresión del nodo L-terminal n 1, donde xi = (xi1, ..., xip) para i = 1,. . . , n, dándonos las particiones L {R [m]} l = 1. l 2. (c) Calcule las predicciones óptimas del nodo terminal [m] para cada región R [m], l = 1, 2,. . . , L ll [m] ^ l = log
+i: xi R [m] l
+
+^ ^ u [m] = wi - yi exp [(1 -) F [m-1] (xi)] + exp [(2 -) F [m-1] (xi)] i
+
+i = 1,. . . , n.
+
+^ wi yi exp [(1 -) F [m-1] (xi)] ^ wi exp [(2 -) F [m-1] (xi)]
+
+.
+
+i: xi R [m] l
+
+^ 2. (d) Actualice F [m] (x) para cada región R [m], l = 1, 2,. . . , L l ^ ^ ^ l F [m] (x) = F [m-1] (x) + [m] I (x R [m]) l ^ 3. Reporte F [M] (x) como estimación final l = 1, 2,. . . , L.
+
+
+13
+
+
+Finalmente, aplicamos en (11) y (20) para obtener las estimaciones correspondientes () y (). Algunos problemas computacionales adicionales para evaluar las funciones de probabilidad de registro en (20) y (21) se discuten en el Apéndice Parte B.
+
+4.3 interpretación del modelo
+Comparado con otros métodos de aprendizaje estadístico no paramétrico, como las redes neuronales y las máquinas del núcleo, nuestro nuevo estimador proporciona resultados interpretables. En esta sección, discutimos algunas formas.
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+para la interpretación del modelo después de ajustar el modelo Tweedie reforzado. 4.3.1 Efectos marginales de los predictores.
+
+Los efectos principales y los efectos de interacción de las variables en el modelo Tweedie mejorado pueden extraerse fácilmente. En nuestra estimación, podemos controlar el orden de las interacciones seleccionando el tamaño de árbol L (el número de nodos terminales) y el número p de predictores. Un árbol con nodos terminales L produce una función de aproximación de los predictores p con un orden de interacción a lo sumo (L - 1, p). Por ejemplo, un tocón (L = 2) produce un modelo TDboost aditivo con solo los efectos principales de los predictores, ya que es una función basada en una única variable de división en cada árbol. El ajuste L = 3 permite tanto efectos principales como interacciones de segundo orden. Siguiendo a Friedman (2001) utilizamos los llamados gráficos de dependencia parcial para visualizar los efectos principales y los efectos de interacción. Dados los datos de entrenamiento {yi, xi} n, con un vector de entrada p-dimensional i = 1 x = (x1, x2, . . . , xp), sea zs un subconjunto de tamaño s, tal que zs = {z1,. . . , zs} {x1,. . . , xp}. Por ejemplo, para estudiar el efecto principal de la variable j, establecemos el subconjunto zs = {zj}, y para estudiar la interacción de segundo orden de las variables i y j, establecemos zs = {zi, zj}. Sea z \ s el conjunto de complementos ^ de zs, de modo que z \ szs = {x1,. . . , xp}. Deje que la predicción F (zs | z \ s) sea una función del subconjunto zs ^ condicionado a valores específicos de z \ s. La dependencia parcial de F (x) en zs puede entonces formularse tal que z \ szs = {x1,. . . , xp}. Deje que la predicción F (zs | z \ s) sea una función del subconjunto zs ^ condicionado a valores específicos de z \ s. La dependencia parcial de F (x) en zs puede entonces formularse tal que z \ szs = {x1,. . . , xp}. Deje que la predicción F (zs | z \ s) sea una función del subconjunto zs ^ condicionado a valores específicos de z \ s. La dependencia parcial de F (x) en zs puede entonces formularse
+
+
+14
+
+
+^ como F (zs | z \ s) promediado sobre la densidad marginal del subconjunto del complemento z \ s ^ F s (zs) = ^ F (zs | z \ s) p \ s (z \ s) dz \ s, p (x) dz s es la densidad marginal de z \ s. Estimamos (22) por (23) (22)
+
+donde p \ s (z \ s) = 1 F s (zs) = n
+norte
+
+i = 1
+
+^ F (zs | z \ s, i),
+
+ donde {z \ s, i} n son evaluados en los datos de entrenamiento. Luego trazamos Fs (zs) contra zs. Tenemos ini = 1
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Se incluyó la función de diagrama de dependencia parcial en nuestro paquete R "TDboost". Demostraremos esta funcionalidad en la Sección 6. 4.3.2 Importancia variable
+
+En muchas aplicaciones es interesante identificar los factores predictivos relevantes del modelo en el contexto de los métodos de conjunto basados en árboles. El modelo TDboost define una medida de importancia variable para cada predictor candidato X j en el conjunto X = {X1,. . . , X p} en términos de predicción / explicación de la respuesta Y. La principal ventaja de este procedimiento de selección de variables, en comparación con los métodos de selección univariados, es que el enfoque considera el impacto de cada predictor individual, así como las interacciones multivariadas entre predictores simultáneamente . Comenzamos por definir la medida de importancia variable (VI en adelante) en el contexto de un árbol único. Presentado por primera vez por Breiman et al. (1984), la VI medida IX j (T m) de la variable X j en un solo árbol T m se define como la reducción de la heterogeneidad total de la variable de respuesta Y producida ^ por X j, que se puede estimar sumando todas las disminuciones en las reducciones de error al cuadrado que obtuve en todos los nodos internos L - 1 cuando se selecciona X j como la variable de división. Indique v (X j) = l el evento de que X j se seleccione como la variable de división en el nodo interno l, y deje que I jl = I (v (X j) = l). Entonces
+L-1
+
+IX j (T m) =
+
+^ l I jl,
+l = 1
+
+(24)
+
+
+15
+
+
+^ donde l se define como la diferencia de error al cuadrado entre el ajuste constante y los dos ajustes de la sub-región (los ajustes de la sub-región se logran dividiendo la región asociada con el nodo interno l en las regiones izquierda y derecha). Friedman (2001) extendió la VI medida IX j para el modelo de impulso con una combinación de árboles de regresión M, promediando (24) sobre {T 1,. . . , TM}: 1 IX j = M
+METRO
+
+m = 1
+
+IX j (Tm).
+
+(25)
+
+A pesar del amplio uso de la medida VI, Breiman et al. (1984) y White y Liu (1994)
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+entre otros, han señalado que las medidas VI (24) y (25) están sesgadas: incluso si X j es una variable no informativa de Y (no correlacionada con Y), X j todavía puede seleccionarse como una variable de división, por lo tanto la medida VI de X j no es cero por la ecuación (25). Siguiendo a Sandri y Zuccolotto (2008) y Sandri y Zuccolotto (2010) para evitar el sesgo de selección de variables, en este documento calculamos una medida de VI ajustada para cada variable explicativa permutando cada X j, los detalles computacionales se proporcionan en la Parte C del Apéndice.
+
+4.4 Implementación
+Hemos implementado nuestro método propuesto en un paquete de R "TDboost", que está disponible públicamente en Comprehensive R Archive Network en http://cran.r-project.org/web/packages/ TDboost / index.html. Aquí, discutimos la elección de tres parámetros meta en el algoritmo 1: L (el tamaño de los árboles), (el factor de contracción) y M (el número de pasos de impulso). Para evitar un ajuste excesivo y mejorar las predicciones fuera de la muestra, el procedimiento de refuerzo puede regularizarse limitando el número de iteraciones de aumento M (detención temprana; Zhang y Yu, 2005) y el factor de contracción. La evidencia empírica (Friedman, 2001; Bè hlmann y Hothorn, 2007; Ridgeu way, 2007) mostró que la precisión predictiva es casi siempre mejor con un factor de contracción menor a costa de más tiempo de cómputo. Sin embargo, los valores más pequeños de generalmente requieren un mayor número de iteraciones de refuerzo M y, por lo tanto, inducen más tiempo de computación (Friedman, 2001). Elegimos un "suficientemente pequeño" = 0.005 en todo y determinamos M por los datos.
+
+
+dieciséis
+
+
+El valor L debe reflejar el verdadero orden de interacción en el modelo subyacente, pero casi nunca tenemos ese conocimiento previo. Por lo tanto, elegimos los valores óptimos de M y L utilizando la validación cruzada de pliegues K, comenzando con un valor fijo de L. Los datos se dividen en K pliegues de igual tamaño aproximadamente. Deje una función de índice (i): {1,. . . , n} {1,. . . , K} indica el pliegue al que se asigna la observación i. Cada vez, eliminamos el kth fold de los datos (k = 1, 2, ..., K) y entrenamos el modelo utilizando los ^ [M] restantes K - 1 pliegues. Denotando por Fk (x) el modelo resultante, calculamos la pérdida de validación al predecir cada késimo vez de los datos eliminados:
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+norte
+
+CV (M, L) =
+
+1 n
+
+i = 1
+
+^ [M] (yi, F- (i) (xi; L) |).
+
+(26)
+
+Seleccionamos la M óptima en la que se alcanza la pérdida de validación mínima ML = argmin CV (M, L).
+METRO
+
+Si también tenemos que seleccionar L, repetimos todo el proceso para varios L (por ejemplo, L = 2, 3, 4, 5) y seleccionamos el que tenga el menor error de generalización mínimo L = argmin CV (L, ML).
+L
+
+En un caso dado, el ajuste de árboles con una L más alta hace que se requiera una M más pequeña para alcanzar el error mínimo.
+
+5
+
+Estudios de simulacion
+
+En esta sección, comparamos TDboost con el modelo Tweedie GLM (TGLM: Jørgensen y de Souza, 1994) y el modelo Tweedie GAM en términos del rendimiento de estimación de la función. El modelo Tweedie GAM lo propone Wood (2001), que se basa en un enfoque de spline de regresión penalizado con selección automática de suavidad. Hay un paquete R "MGCV" que acompaña el trabajo, disponible en http://cran.r-project.org/web/packages/mgcv/index. html. En todos los ejemplos numéricos a continuación que utilizan el modelo TDboost, la validación cruzada de cinco veces es
+
+
+17
+
+
+adoptado para seleccionar el par óptimo (M, L), mientras que el factor de contracción se establece en su valor predeterminado de 0.005.
+
+5.1 Caso I
+En este estudio de simulación, demostramos que TDboost es adecuado para ajustarse a funciones objetivo que no son lineales o que involucran interacciones complejas. Consideramos dos funciones objetivo reales: · Modelo 1 (función discontinua): la función objetivo es discontinua según lo definido por F (x) = 0.5I (x> 0.5). Suponemos que x Unif (0, 1) y y Tw (,,) con = 1.5 y = 0.5. · Modelo 2 (interacción compleja): la función objetivo tiene dos colinas y dos valles. F (x1, x2) = e-5 (1-x1) + x2 + e-5x1 + (1-x2), que corresponde a un escenario común en el que el efecto de una variable cambia según el efecto de otra. Suponemos que x1, x2 Unif (0, 1) y y Tw (,,) con = 1.5 y = 0.5. Generamos n = 1000 observaciones para entrenamiento y n = 1000 para pruebas, y ajustamos los datos de entrenamiento usando TDboost, MGCV y TGLM. Dado que las verdaderas funciones de destino son conocidas,
+norte
+2 2 2 2
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+i = 1
+
+^ | F (xi) - F (xi) |
+
+^ donde tanto la función de predicción real F (xi) como la función de predicción F (xi) se evalúan en el conjunto de prueba. Los MAD resultantes en los datos de prueba se informan en la Tabla 1, que tienen un promedio de más de 100 repeticiones independientes. Las funciones ajustadas del Modelo 2 se trazan en la Figura 2. En ambos casos, encontramos que TDboost supera a TGLM y MGCV en términos de la capacidad de recuperar las funciones verdaderas y da los errores de predicción más pequeños.
+
+
+18
+
+
+5.2 Caso II
+La idea es ver el rendimiento del estimador TDboost y el estimador MGCV en una variedad de funciones de predicción muy complicadas y generadas al azar, y estudiar cómo el tamaño del conjunto de entrenamiento, la configuración de distribución y otras características de los problemas afectan el rendimiento final de los dos métodos. . Utilizamos el modelo "generador de función aleatoria" (RFG) de Friedman (2001) en nuestra simulación. La verdadera función de destino F se genera aleatoriamente como una expansión lineal de las funciones {gk} 20: k = 1
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+20
+
+F (x) =
+k = 1
+
+bk gk (zk).
+
+(27)
+
+Aquí, cada coeficiente bk es una variable aleatoria uniforme de Unif [-1, 1]. Cada gk (zk) es una función de zk, donde zk se define como un subconjunto pk de la variable de diez dimensiones x en la forma zk = {xk (j)} pk, j = 1 (28)
+
+donde cada k es una permutación independiente de los enteros {1,. . . , pag}. El tamaño pk se selecciona aleatoriamente por min (2.5 + rk, p), donde rk se genera a partir de una distribución exponencial con media 2. Por lo tanto, el orden esperado de interacciones presentado en cada gk (zk) es entre cuatro y cinco. Cada función gk (zk) es una función gaussiana tridimensional: 1 gk (zk) = exp - (zk - uk) Vk (zk - uk), 2 Vk se define por Vk = Uk Dk Uk, (30) (29 )
+
+donde cada vector medio uk se genera aleatoriamente a partir de N (0, I pk). La matriz de covarianza pk × pk
+
+donde Uk es una matriz ortonormal aleatoria, Dk = diag {dk [1],. . . , dk [pk]}, y la raíz cuadrada de cada elemento diagonal {yi, xi} n de acuerdo con i = 1 yi Tw (i,,), xi N (0, I p), i = 1,. . . , n, (31) dk [j] es una variable aleatoria uniforme de Unif [0.1, 2.0]. Generamos datos
+
+donde i = exp {F (xi)}.
+
+
+19
+
+
+Configuración I: cuando se conoce el índice En primer lugar, estudiamos la situación de que el parámetro de índice verdadero se conoce al ajustar modelos. Generamos datos según el modelo RFG con el parámetro de índice = 1.5 y el parámetro de dispersión = 1 en el modelo verdadero. Establecemos el número de predictores para que sean p = 10 y generamos n {1000, 2000, 5000} observaciones como conjuntos de entrenamiento, en los que tanto MGCV como TDboost están equipados con el valor verdadero de 1.5. Se generó un conjunto de prueba adicional de n = 5000 observaciones para evaluar el desempeño de la estimación final.
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+La Figura 3 muestra los resultados de la simulación para comparar el rendimiento de estimación de MGCV y TDboost, al variar el tamaño de la muestra de entrenamiento. Las distribuciones empíricas de las MAD que se muestran como diagramas de caja se basan en 100 replicaciones independientes. Podemos ver que en todos los casos, TDboost supera a MGCV en términos de precisión de predicción. También probamos el rendimiento de la estimación cuando el parámetro de índice está mal especificado, es decir, usamos un valor de conjetura que difiere del valor verdadero al ajustar el modelo TDboost. Debido a que es estadísticamente ortogonal a y, lo que significa que los elementos fuera de la diagonal de la matriz de información de Fisher son cero (Jørgensen, 1997), esperamos que varíe muy lentamente a medida que cambien. De hecho, utilizando ^ ~ los datos de simulación anteriores con el valor verdadero = 1.5 y = 1, ajustamos los modelos TDboost con ~ nueve valores de suposición de {1.1, 1.2,. . . , 1.9}. Los MAD resultantes se muestran en la Figura 5, que muestra que la elección del valor casi no tiene un efecto significativo en la precisión de la estimación de. Configuración II: uso del índice estimado A continuación, estudiamos la situación en la que se desconoce el parámetro del índice verdadero, y usamos el estimado obtenido del procedimiento de verosimilitud del perfil descrito en la Sección 4.2 para ajustar el modelo. El mismo esquema de generación de datos se adopta como en la Configuración I, excepto que ahora MGCV y TDboost se ajustan estimando al máximo la probabilidad de perfil. La Figura 6 muestra los resultados de la simulación para comparar el rendimiento de estimación de MGCV y TDboost en dicha configuración. Podemos ver que el uso del índice estimado A continuación, estudiamos la situación en la que se desconoce el parámetro del índice verdadero, y utilizamos el estimado obtenido del procedimiento de verosimilitud del perfil descrito en la Sección 4.2 para ajustar el modelo. El mismo esquema de generación de datos se adopta como en la Configuración I, excepto que ahora MGCV y TDboost se ajustan estimando al máximo la probabilidad de perfil. La Figura 6 muestra los resultados de la simulación para comparar el rendimiento de estimación de MGCV y TDboost en dicha configuración. Podemos ver que el uso del índice estimado A continuación, estudiamos la situación en la que se desconoce el parámetro del índice verdadero, y utilizamos el estimado obtenido del procedimiento de verosimilitud del perfil descrito en la Sección 4.2 para ajustar el modelo. El mismo esquema de generación de datos se adopta como en la Configuración I, excepto que ahora MGCV y TDboost se ajustan estimando al máximo la probabilidad de perfil. La Figura 6 muestra los resultados de la simulación para comparar el rendimiento de estimación de MGCV y TDboost en dicha configuración. Podemos ver que el La Figura 6 muestra los resultados de la simulación para comparar el rendimiento de estimación de MGCV y TDboost en dicha configuración. Podemos ver que el La Figura 6 muestra los resultados de la simulación para comparar el rendimiento de estimación de MGCV y TDboost en dicha configuración. Podemos ver que el
+
+
+20
+
+
+los resultados no tienen una diferencia significativa con los resultados de la Configuración I: TDboost aún supera a MGCV en términos de precisión de predicción cuando se utiliza el valor estimado en lugar del verdadero. Por último, demostramos nuestros resultados de la estimación de la dispersión y el índice utilizando la probabilidad del perfil. Un total de 200 conjuntos de muestras de entrenamiento se generan aleatoriamente a partir de un modelo verdadero de acuerdo con la configuración (31) con = 2 y = 1.7, y cada muestra tiene 2000 observaciones. Encajamos el modelo TDboost en cada muestra y calculamos las estimaciones en cada uno de los 50 valores espaciados equitativamente {1,. . . , 50} en (1, 2). El (j, (j)) correspondiente al máximo
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+La probabilidad de perfil es la estimación de (,). El proceso de estimación se repite 200 veces. Los índices estimados tienen una media = 1.68 y el error estándar SE () = 0.026, por lo que el valor verdadero = 1.7 está dentro de ± SE (). Las dispersiones estimadas tienen media = 1.82 y error estándar SE () = 0.12. La Figura 4 muestra la función de probabilidad de perfil para una sola ejecución.
+
+6
+
+Aplicación: Reclamaciones de automóviles
+
+6.1 conjunto de datos
+Consideramos un conjunto de datos de reclamaciones de seguros de automóviles según lo analizado en Yip y Yau (2005) y Zhang y Yu (2005). El conjunto de datos contiene 10,296 registros de vehículos de conductor, cada registro incluye el monto total de reclamación de un conductor individual (zi) en los últimos cinco años (wi = 5) y 17 características xi = (xi, 1, ..., xi, 17) para El conductor y el vehículo asegurado. Queremos predecir la prima pura esperada basada en xi. La tabla 3 resume el conjunto de datos. Las estadísticas descriptivas de los datos se proporcionan en la Parte D del Apéndice. El histograma de los montos totales de las reclamaciones en la Figura 1 muestra que la distribución empírica de estos valores es altamente sesgada. Encontramos que aproximadamente el 61.1% de los asegurados no tenían reclamaciones, y aproximadamente el 29.6% de los asegurados tenían una reclamación positiva de hasta 10,000 dólares. Tenga en cuenta que sólo 9. El 3% de los asegurados tenía un monto de reclamo alto por encima de los 10.000 dólares, pero la suma del monto de su reclamo supuso el 64% del monto total. Un-
+
+
+21
+
+
+Otra característica importante de los datos es que hay interacciones entre las variables explicativas. Por ejemplo, en la Tabla 2 podemos ver que el efecto marginal de la variable REVOCADA en el monto total de la reclamación es mucho mayor para los asegurados que viven en el área urbana que los que viven en el área rural. La importancia de los efectos de interacción se confirmará más adelante en nuestro análisis de datos.
+
+6.2 modelos
+Separamos todo el conjunto de datos en un conjunto de entrenamiento y un conjunto de pruebas con el mismo tamaño. Luego, el TDDescargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+el modelo boost se ajusta al conjunto de entrenamiento y se ajusta con una validación cruzada de cinco veces. Para comparación, también ajustamos TGLM y MGCV, ambos se ajustan utilizando todas las variables explicativas. En MGCV, las variables numéricas AGE, BLUEBOOK, HOMEKIDS, KIDSDRIV, MVR PTS, NPOLICY, RETAINED y TRAVTIME se modelan mediante términos suaves representados mediante el uso de splines de regresión penalizados. Encontramos la suavidad adecuada para cada término de modelo aplicable utilizando la Validación cruzada generalizada (GCV) (Wahba, 1990). Para el modelo TDboost, no es necesario llevar a cabo la transformación de datos, ya que el método de aumento basado en árbol puede manejar automáticamente diferentes tipos de datos. Para otros modelos, utilizamos la transformación logarítmica en BLUEBOOK, es decir, log (BLUEBOOK), y escalamos todas las variables numéricas excepto HOMEKIDS, KIDSDRIV, MVR PTS y NPOLICY tienen media 0 y desviación estándar 1. También creamos variables ficticias para las variables categóricas con más de dos niveles (CAR TYPE, JOBCLASS y MAX EDUC). Para todos los modelos, utilizamos el método de probabilidad de perfil para estimar la dispersión y el índice, que a su vez se utilizan para ajustar los modelos finales.
+
+6.3 Comparación de rendimiento
+Para examinar el rendimiento de TGLM, MGCV y TDboost, después de ajustar el conjunto de entrenamiento, predecimos el valor puro P (x) = (x) mediante la aplicación de cada modelo en el conjunto de pruebas independientes. Sin embargo, se debe prestar atención al medir las diferencias entre las primas previstas.
+
+
+22
+
+
+P (x) y pérdidas reales y en los datos de prueba. La pérdida cuadrática media o la pérdida absoluta media no es apropiada aquí porque las pérdidas tienen altas proporciones de ceros y están muy sesgadas. Por lo tanto, una estadística alternativa mide la curva de Lorenz ordenada y el índice de Gini asociado propuesto por Frees et al. (2011) se utilizan para capturar la discrepancia entre las distribuciones de primas y pérdidas. Al calcular el índice de Gini, se puede comparar el rendimiento de diferentes modelos predictivos. Aquí solo explicamos brevemente la idea de la curva de Lorenz ordenada (Frees et al., 2011, 2013). Sea B (x) la "prima base", que se calcula utilizando la descarga previa existente descargada por [McGill University Library] a las 18:16 28 de junio de 2016
+
+mi modelo de predicción, y deje que P (x) sea la "prima competitiva" calculada utilizando un modelo de predicción de prima alternativa. En la curva de Lorenz ordenada, la distribución de las pérdidas y la distribución de las primas se clasifican según la prima relativa R (x) = P (x) / B (x). La distribución premium ordenada es ^ DP (s) =
+ni = 1
+
+B (xi) I (R (xi) s), ni = 1 B (xi)
+
+y la distribución de pérdida ordenada es ^ DL (s) =
+ni = 1 yi I (R (xi) ni = 1 yi
+
+ s)
+
+.
+
+Dos distribuciones empíricas se basan en el mismo orden de clasificación, lo que hace posible comparar las distribuciones de primas y pérdidas para el mismo grupo de asegurados. La curva de Lorenz ordenada es ^ ^ la gráfica de (DP (s), DL (s)). Cuando el porcentaje de pérdidas es igual al porcentaje de primas para el asegurador, la curva da como resultado una línea de 45 grados, conocida como "la línea de igualdad". El doble del área entre la curva de Lorenz ordenada y la línea de igualdad mide la discrepancia entre las distribuciones de prima y pérdida, y se define como el índice de Gini. Las curvas debajo de la línea de igualdad indican que, dado el conocimiento de la prima relativa, una aseguradora podría identificar los contratos rentables, cuyas primas son mayores que las pérdidas. Por lo tanto, un índice Gini más grande (por lo tanto, un área más grande entre la línea de igualdad y la curva a continuación) implicaría un modelo más favorable. Siguiendo a Frees et al. (2013), especificamos sucesivamente la predicción de cada modelo como la prima base B (x) y utilizamos las predicciones de los modelos restantes como la prima competidora P (x)
+
+
+23
+
+
+Para calcular los índices de Gini. El procedimiento completo de la división de datos y el cálculo del índice de Gini se repite 20 veces, y en la Tabla 4 se presenta una matriz de los índices de Gini promediados y los errores estándar. Para seleccionar el "mejor" modelo, utilizamos una estrategia "minimax" (Frees et al., 2013) para seleccionar el modelo premium base que sea menos vulnerable a los modelos premium competidores; es decir, seleccionamos el modelo que proporciona el más pequeño de los índices máximos de Gini, tomados sobre las primas de la competencia. Encontramos que el índice máximo de Gini es 15.528 cuando se usa B (x) = TGLM (x) como prima base, ^ 12.979 cuando B (x) = MGCV (x), y 4.000 cuando B (x) = TDboost (x) . Por lo tanto, TDboost tiene el ^ ^
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+el índice máximo de Gini más pequeño en 4.000, por lo tanto, es el menos vulnerable a puntajes alternativos. La Figura 7 también muestra que cuando se selecciona TGLM (o MGCV) como la prima base, el área entre la línea de igualdad y la curva de Lorenz ordenada es mayor al elegir TDboost como la prima competidora, lo que indica nuevamente que el modelo TDboost representa la más favorable elección.
+
+6.4 Interpretación de los resultados.
+A continuación, nos centramos en el análisis utilizando el modelo TDboost. Existen varias variables explicativas relacionadas significativamente con la prima pura. La medida VI y el valor de referencia de cada variable explicativa se muestran en la Figura 8. Encontramos que REVOKED, MVR PTS, AREA y BLUEBOOK tienen puntuaciones altas en la medida VI (la línea vertical), y sus puntuaciones superan las líneas de base correspondientes (la línea horizontal longitud de línea), lo que indica que la importancia de esas variables explicativas es real. También encontramos que las variables EDAD, CLASE DE TRABAJO, TIPO DE COCHE, NPOLICÍA, EDUCACIÓN MÁXIMA, CASADO, NIÑO Y CAR USO tienen puntajes de medida VI más grandes que la línea de base, pero las escalas absolutas son mucho menores que las cuatro variables mencionadas anteriormente. Por otro lado, aunque la medida VI de, por ejemplo, TRAVTIME es bastante grande, no supera significativamente la importancia de la línea de base. Ahora usamos las parcelas de dependencia parcial para visualizar el modelo ajustado. La Figura 9 muestra los efectos principales de cuatro variables explicativas importantes sobre la prima pura. Vemos claramente que los fuertes efectos no lineales existen en los predictores BLUEBOOK y MVR PTS: para los asegurados cuyos
+
+
+24
+
+
+los valores del vehículo están por debajo de 40 K, su prima pura está asociada negativamente con el valor del vehículo; después de que el valor del vehículo pasa 40 K, la curva premium pura alcanza una meseta; Además, la prima pura se asocia positivamente con los puntos de registro del vehículo de motor MVR PTS, pero la curva premium pura alcanza una meseta cuando la MVR PTS excede de seis. Por otro lado, las parcelas de dependencia parcial sugieren que un asegurado que vive en el área urbana (AREA = "URBAN") o con la licencia de conducir revocada (REVOKED = "YES") generalmente tiene una prima pura relativamente alta. En nuestro modelo, la elección basada en datos para el tamaño del árbol es L = 7, lo que significa que nuestro modelo
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Incluye interacciones de orden superior. En la Figura 10, visualizamos los efectos de cuatro interacciones importantes de segundo orden utilizando los gráficos de dependencia parcial conjunta. Estas cuatro interacciones son AREA × MVR PTS, AREA × NPOLICY, AREA × REVOKED y AREA × TRAVTIME. Estas cuatro interacciones involucran la variable ÁREA: podemos ver que los efectos marginales de MVR PTS, NPOLICY, REVOKED y TRAVTIME sobre la prima pura son mayores para los asegurados que viven en el área urbana (AREA = "URBAN") que los que viven en El área rural (AREA = "RURAL"). Por ejemplo, una fuerte interacción AREA × MVR PTS sugiere que para los asegurados que viven en el área rural, los puntos de registro de vehículos motorizados tienen un efecto marginal positivo más débil en la prima pura esperada que para los asegurados que viven en el área urbana.
+
+7
+
+Conclusiones
+
+La necesidad de factores de riesgo no lineales, así como las interacciones de los factores de riesgo para modelar el tamaño de las reclamaciones de seguros es bien reconocida por los profesionales actuariales, pero las herramientas prácticas para estudiarlos son muy limitadas. En este documento, que no se basa en el supuesto lineal ni en una estructura de interacción preespecificada, se ha diseñado un método flexible de aumento de gradiente basado en árboles para el modelo de Tweedie. Implementamos el método propuesto en un paquete de R fácil de usar "TDboost" que puede hacer predicciones precisas de primas de seguro para conjuntos de datos complejos y sirve como una herramienta conveniente para que los profesionales actuariales investiguen los efectos no lineales y de interacción. En el contexto del seguro de auto personal,
+
+
+25
+
+
+usamos implícitamente la duración de la póliza como una medida de volumen (o exposición), y demostramos el desempeño de predicción favorable de TDboost para la prima pura. En el caso de que se utilicen medidas de exposición distintas a la duración, lo cual es común en los seguros comerciales, podemos extender el método TDboost al tamaño de reclamación correspondiente simplemente reemplazando la duración con cualquier medida de exposición elegida. TDboost también puede ser un complemento importante del modelo GLM tradicional en la calificación de seguros. Incluso en las circunstancias estrictas en que los reguladores exigen que el modelo final tenga
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+En una estructura GLM, nuestro enfoque aún puede ser muy útil debido a su capacidad para extraer información adicional como no-monotonicidad / no-linealidad e interacción importante. En el Apéndice Parte E, proporcionamos un análisis de datos reales adicionales para demostrar que nuestro método puede proporcionar información sobre la estructura de los términos de interacción. Después de integrar la información obtenida sobre los términos de interacción en el modelo GLM original, podemos mejorar mucho la precisión general de la predicción de la prima de seguro mientras mantenemos una estructura de modelo GLM. Además, vale la pena mencionar que las aplicaciones del método propuesto pueden ir más allá de la predicción de la prima de seguro y ser de interés para los investigadores en muchos otros campos, incluidos la ecología (Foster y Bravington, 2013), la meteorología (Dunn, 2004) y la ciencia política. (Lauderdale, 2012). Ver, por ejemplo, Dunn y Smyth (2005) y Qian et al. (2015) para descripciones de las amplias aplicaciones de distribución de Tweedie. El método propuesto y la herramienta de implementación permiten a los investigadores en estos campos relacionados aventurarse fuera del marco de modelado de Tweedie GLM, construir nuevos modelos flexibles desde perspectivas no paramétricas y usar las herramientas de interpretación del modelo demostradas en nuestro análisis de datos reales para estudiar sus propios problemas de interés.
+
+
+26
+
+
+Referencias
+Anstey, KJ, Wood, J., Lord, S. y Walker, JG (2005), "Factores cognitivos, sensoriales y físicos que permiten conducir con seguridad en adultos mayores", Clinical Clinical Psychology, 25, 4565. Breiman, L. ( 1996), "Bagging predictors," Machine learning, 24, 123140. - (1998), "Arcing classifier (con discusión y una réplica del autor)," The Annals of Statistics, 26, 801849.
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+- (1999), "Juegos de predicción y algoritmos de arco", Neural Computation, 11, 14931517. Breiman, L., Friedman, J., Olshen, R., Stone, C., Steinberg, D. y Colla, P . (1984), "CART: Clasificación y árboles de regresión", Wadsworth. Brent, RP (2013), Algoritmos para minimización sin derivados, Courier Dover Publications. B¨ hlmann, P. y Hothorn, T. (2007), "Aumentar los algoritmos: Regularización, predicción y ajuste de modelo u", Statistical Science, 22, 477505. Dionne, G., Gouri´ roux, C. y Vanasse, C. (2001), "Prueba de evidencia de selección adversa en el mercado de seguros de automóviles: un comentario," Journal of Political Economy, 109, 444453. Dunn, PK (2004), "La ocurrencia y la cantidad de precipitación se pueden modelar simultáneamente , "International Journal of Climatology, 24, 12311239.
+
+
+27
+
+
+Foster, SD y Bravington, MV (2013), "Un modelo de PoissonGamma para el análisis de datos continuos no negativos ecológicos," Estadísticas ambientales y ecológicas, 20, 533552. Frees, EW, Meyers, G. y Cummings, AD (2011 ), "Resumiendo los puntajes de los seguros utilizando un índice de Gini", Journal of the American Statistical Association, 106. Frees, EWJ, Meyers, G., y Cummings, AD (2013), "Elaboración de calificaciones de seguros y un índice de Gini", Journal of Risk y seguros.
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Los elementos del aprendizaje estadístico: minería de datos, inferencia y predicción. Segunda Edición., Serie Springer en Estadística, Springer. Hastie, TJ y Tibshirani, RJ (1990), Modelos aditivos generalizados, vol. 43, CRC Press. Jørgensen, B. (1987), "Exponential dispersion models," Journal of the Royal Statistical Society. Serie B (Metodológica), 127162.
+
+
+28
+
+
+- (1997), La teoría de los modelos de dispersión, vol. 76, CRC Press. Jørgensen, B. y de Souza, MC (1994), "Ajustando el modelo de Poisson compuesto de Tweedie a los datos de reclamaciones de seguros", Scandinavian Actuarial Journal, 1994, 6993. Lauderdale, BE (2012), "Compound PoissonGamma modelos de regresión para los resultados en dólares que son a veces cero, "Political Analysis, 20, 387399. Mildenhall, SJ (1999)," Una relación sistemática entre el sesgo mínimo y el lineal generalizado
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Revista de estadística computacional y gráfica, preimpresión. Renshaw, AE (1994), "Modelado del proceso de reclamaciones en presencia de covariables", ASTIN Bulletin, 24, 265285. Ridgeway, G. (2007), "Modelos de regresión aumentada generalizada," Manual del paquete R. Sandri, M. y Zuccolotto, P. (2008), "Un algoritmo de corrección de sesgo para la medida de importancia variable de Gini en los árboles de clasificación", Journal of Computational and Graphical Statistics, 17.
+
+
+29
+
+
+- (2010), "Análisis y corrección del sesgo en la disminución total de las medidas de impureza de nodos para algoritmos basados en bases," Estadísticas y computación, 20, 393407. Lluvias, VE y Shotick, JA (1994), "Los efectos de las características del hogar en demanda de seguro: un análisis de tobit, "Journal of Risk and Insurance, 492502. Smyth, G. y Jørgensen, B. (2002)," Ajustando el modelo Poisson compuesto de Tweedie a los datos de reclamaciones de seguros: Modelo de dispersión, "Boletín ASTIN, 32, 143157.
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Smyth, GK (1996), "Análisis de regresión de datos cuantitativos con ceros exactos", en Actas del segundo taller de Australia en Japón sobre modelos estocásticos en ingeniería, tecnología y gestión, Citeseer, pp. 572580. Tweedie, M. (1984), " Un índice que distingue entre algunas familias exponenciales importantes, "en Estadísticas: Aplicaciones y Nuevas Direcciones: Proc. Conferencia Internacional Golden Jubilee del Instituto de Estadística de la India, pp. 579604. Van de Ven, W. y van Praag, BM (1981), "Aversión al riesgo y deducibles en el seguro de salud privado: aplicación de un modelo de tobit ajustado a los gastos de atención de salud familiar" Salud, economía y economía de la salud, 12548. Wahba, G. (1990), Modelos Spline para datos de observación, vol. 59, SIAM. White, AP y Liu, WZ (1994), "Nota técnica:
+
+
+30
+
+
+Zhang, T. y Yu, B. (2005), "Impulso con paradas tempranas: convergencia y consistencia," The Annals of Statistics, 15381579. Zhang, W. (2011), "cplm: algoritmos EM de Monte Carlo y métodos bayesianos para encajando modelos lineales compuestos de Tweedie Poisson, "R package, http://cran.r-project.org/web/ packages / cplm / index.html.
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+
+31
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 1: Histograma de los datos de reclamación de seguro de automóvil analizados en Yip y Yau (2005). Muestra que hay 6290 registros de pólizas con cero reclamaciones totales por año de póliza, mientras que los 4006 registros de pólizas restantes tienen pérdidas positivas.
+
+
+32
+
+
+(a) F verdadero (x1, x2) ^ (b) TDboost F (x1, x2)
+
+2.5
+
+2.5
+
+2.0
+
+2.0
+
+F (x1, x2)
+1.5
+
+^ F (x1, x2)
+1.5
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+1.0
+
+1.0
+
+0.8 0.6 0.4 0.4 0.2 0.0 0.0 0.2 0.2 0.6
+
+0.8 0.6 0.4 0.4 0.2 0.0 0.0 0.2 0.2 0.6
+
+x2
+
+x1
+
+x2
+
+x1
+
+^ (c) TGLM F (x1, x2)
+
+^ (d) MGCV F (x1, x2)
+
+1.35 1.30 1.25 ^ F (x1, x2) 1.20 1.15 1.10
+
+2.0
+
+^ F (x1, x2)
+
+1.5
+
+1.0
+
+0.8 0.6 0.4 0.4 0.2 0.0 0.0 0.2 0.2 0.6
+
+0.8 0.6 0.4 0.4 0.2 0.0 0.0 0.2 0.2 0.6
+
+x2
+
+x1
+
+x2
+
+x1
+
+Figura 2: Curvas ajustadas que recuperan la función objetivo definida en el Modelo 2. La figura superior izquierda muestra la función objetivo verdadera. Las figuras superior derecha, inferior izquierda e inferior derecha muestran las predicciones sobre los datos de prueba de TDboost, TGLM y MGCV, respectivamente.
+
+
+33
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 3: Resultados de la simulación para el Ajuste I: compare el rendimiento de estimación de MGCV y TDboost al variar el tamaño de la muestra de entrenamiento y el parámetro de dispersión en el modelo verdadero. Los diagramas de caja muestran distribuciones empíricas de las MAD basadas en 100 replicaciones independientes.
+
+
+34
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 4: La curva representa la función de probabilidad de perfil de una sola ejecución. La línea de puntos muestra el valor verdadero = 1.7. La línea continua muestra el valor estimado = 1.68 correspondiente a la probabilidad máxima. La dispersión estimada asociada es = 1.89.
+
+
+35
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 5: Resultados de la simulación para el Ajuste I cuando el índice está mal especificado: el rendimiento de estimación de TDboost cuando se varía el valor del parámetro de índice {1.1, 1.2,. . . , 1.9}. En el ~ modelo verdadero = 1.5 y = 1. Los diagramas de caja muestran distribuciones empíricas de las MAD basadas en 200 ~ replicaciones independientes.
+
+
+36
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 6: Resultados de simulación para el Ajuste II: compare el rendimiento de estimación de MGCV y TDboost cuando se varía el tamaño de la muestra de entrenamiento y el parámetro de dispersión en el modelo verdadero. Los diagramas de caja muestran distribuciones empíricas de las MAD basadas en 100 replicaciones independientes.
+
+
+37
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 7: Las curvas de Lorenz ordenadas para los datos de reclamación de seguro de automóvil.
+
+
+38
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 8: Las medidas de importancia variable y líneas de base de 17 variables explicativas para modelar la prima pura.
+
+
+39
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 9: Efectos marginales de las cuatro variables explicativas más significativas sobre la prima pura.
+
+
+40
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Figura 10: Cuatro interacciones fuertes en parejas.
+
+
+41
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Tabla 1: Las MAD promediadas y los errores estándar correspondientes se basan en 100 replicaciones independientes. TGLM MGCV Modelo TDboost 0.1102 (0.0006) 0.0752 (0.0016) 0.0595 (0.0021) 1 2 0.3516 (0.0009) 0.2511 (0.0004) 0.1034 (0.0008)
+
+
+42
+
+
+Tabla 2: El monto total promedio de reclamaciones para diferentes categorías de los asegurados. ÁREA Urbana Rural No 3150.57 904.70 REVOCADA Sí 14551.62 7624.36 11401.05 6719.66 Diferencia
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+
+43
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Tabla 3: Variables explicativas en el conjunto de datos del historial de reclamaciones. Tipo N significa variable numérica, Tipo C significa variable categórica.
+ID 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 EDAD variable EDAD BLUEBOOK HOMEKIDS KIDSDRIV MVR PTS NPOLICY RETENIDO TRAVTIME AREA USO DE AUTOMÓVIL TIPO DE CARRO GÉNERO JOBCLASS MAX EDUC MARRIED REVOKED Tipo NNNNNNNNNCCCC Descripción Tipo de conductor Número de vehículos de conducir niños Puntos de registro de vehículos motorizados Número de pólizas Número de años como cliente Distancia al trabajo Área de trabajo / hogar: Rural, Uso de vehículos urbanos: Comercial, Privado Tipo de vehículo: Panel Truck, Pickup, Sedan, Sports Car, SUV, Van Género del conductor: F, M Desconocido, Cuello azul, Administrativo, Médico, Fabricante de casa, Abogado, Gerente, Profesional, Nivel de educación del estudiante: Preparatoria o inferior, Licenciatura, Preparatoria, Maestría, PhD Casado o no: Sí, No Si la licencia Revocado en los últimos 7 años: Sí, No
+
+
+44
+
+
+
+Descargado por [McGill University Library] a las 18:16 28 de junio de 2016
+
+Tabla 4: Los índices de Gini promediados y los errores estándar en el ejemplo de datos de reclamaciones de seguros de automóviles basados en 20 divisiones aleatorias. Competente Premium Base Premium TGLM MGCV TDboost TGLM MGCV TDboost 0 7.833 (0.338) 15.528 (0.509) 3.044 (0.610) 0 12.979 (0.473) 0 4.000 (0.364) 3.540 (0.415)
+
+
+45
+Ver estadísticas de publicación
+
+
