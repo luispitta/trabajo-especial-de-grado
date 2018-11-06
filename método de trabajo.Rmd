@@ -1,0 +1,282 @@
+---
+title: "Método de trabajo"
+output:
+  html_document: default
+  pdf_document: default
+  always_allow_html: yes
+  Install missing packages: Yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preparación de los datos
+```{r setup2, echo=FALSE, results = 'asis', warning = FALSE, message=FALSE}
+
+options(warn=-1)
+library(xlsx)
+library(plyr)
+library(tidyquant)
+library(janitor)
+library(plotly)
+library(lattice)
+
+```
+
+
+Contamos con los datos de la cartera y siniestros de una importante empresa de seguros del mercado  venezolano. Para preparar los datos usaremos varios paquetes de R entre ellos, tidyquant, janitor, plotly y lattice. Se importarán los datos a R para ser preparados con la fución read_csv: 
+
+
+```{r, warning = FALSE, message=FALSE}
+asegurados <- as_tibble(read.csv('data/asegurados.csv', na.strings = "")) %>% clean_names()
+
+siniestros <- as_tibble(read.csv('data/siniestros.csv')) %>% clean_names()
+
+```
+
+Veamos las variables que tenemos en nuestro conjunto de datos de la cartera de asegurados:
+
+```{r}
+knitr::kable(str(asegurados))
+```
+En nuestros datos eliminaremos de la data de la cartera todas aquellas pólizas que contengan valores nulos:
+
+```{r}
+asegurados <- asegurados %>% drop_na(nombre)
+```
+
+Para este estudio tomaremos sólo aquellas pólizas de coberturas de pérdiadas parciales, por lo que seleccionaremos el campo "tipo_seg_req_des"", sólo  las pólizas con cobertura amplia. Además dado a que en nuestros datos no contamos con la fecha de cancelación para calcular la exposición al riesgo tomaremos sólo las pólizas vigentes en nuestro período de estudio. 
+
+
+```{r}
+asegurados <- asegurados %>% filter(tipo_seg_req_des == 'COBERTURA AMPLIA',
+                                    status_poliza == 'VIGENTE')
+```
+
+
+
+Se deben transformar las variables de fecha al formato de date en R, para que nos sean de utilidad para realizar los cálculos:
+
+```{r,  warning = FALSE, message=FALSE}
+asegurados <-
+  asegurados %>%
+  mutate(
+    fechadesde = lubridate::as_date(as.character(fechadesde),
+    tz = 'UTC',
+    format = '%d/%m/%Y'),
+    fechahasta = lubridate::as_date(as.character(fechahasta),
+    tz = 'UTC',
+    format = '%d/%m/%Y'),
+    fe_nac = lubridate::as_date(as.character(fe_nac),
+    tz = 'UTC',
+    format = '%d/%m/%Y')
+  
+  )
+  
+  
+  siniestros <- siniestros %>%
+  mutate(
+    emisionid = lubridate::as_date(as.character(emisionid),
+    tz = 'UTC',
+    format = '%m/%d/%Y'),
+    operacionid = lubridate::as_date(as.character(operacionid),
+    tz = 'UTC',
+    format = '%m/%d/%Y'),
+    avisoid = lubridate::as_date(as.character(avisoid),
+    tz = 'UTC',
+    format = '%m/%d/%Y')
+  )
+
+```
+
+Crearemos un identificador único de la póliza para poder luego usarlo para la identificación de los siniestros, además nos quedaremos sólo con las pólizas unicas de la cartera:
+
+```{r,  warning = FALSE, message=FALSE}
+asegurados <-asegurados %>% 
+  dplyr::arrange(polizaid, tipo_seg_req_des, fechadesde) %>% 
+  mutate(id_poliza = paste(polizaid,
+                           as.numeric(tipo_seg_req_des),
+                           sep = "_")) %>%  
+  dplyr::distinct(id_poliza, .keep_all = TRUE)
+
+siniestros <- siniestros %>%
+  mutate(id_poliza = paste(polizaid,
+                           as.numeric(tipo_seg_req_des),
+                           sep = "_")) 
+
+```
+
+
+Se seleccionarán aquellas variables que sean relevantes para la aplicación del modelo, y descartaremos las variables nominales o repetitivas:
+
+
+```{r}
+asegurados <- asegurados %>%
+  select(
+  id_poliza,
+  marca,
+  modelo,
+  año = ano,
+  color,
+  clasificacion = tipo_veh_aux,
+  cero_km,
+  cantidad_pasajeros = cant_pasajeros,
+  grupo_peso = ton_desc,
+  grupo,
+  region,
+  tipo_poliza = clasedesc,
+  suma_asegurada = sumaseg,
+  sexo = sexo_1,
+  estado_civil = edociv_1,
+  fecha_nacimiento = fe_nac,
+  fecha_desde = fechadesde,
+  fecha_hasta = fechahasta
+  ) %>% 
+  mutate(edad = round(as_date('2018-08-31') - fecha_nacimiento)/365,0)
+```
+
+Para el caso de los siniestros, se tomarán aquellos siniestros que ocurran dentro de la vigencia de la póliza, y sólo seleccionaremos el monto total de los siniestros y la frecuencia.
+
+
+```{r}
+vigencias <- asegurados %>% 
+  select(id_poliza, fecha_desde, fecha_hasta)
+
+siniestros<- siniestros %>%
+  mutate(monto_siniestro = replace_na(pagado, 0) + replace_na(pendiente_act, 0)) %>% 
+  select(id_poliza, 
+         fecha_ocurrencia = emisionid, 
+         monto_siniestro
+         ) %>% 
+  left_join(vigencias, by = 'id_poliza') %>% 
+  filter(fecha_ocurrencia >= fecha_desde, fecha_ocurrencia <= fecha_hasta) %>% 
+  select(id_poliza, monto_siniestro) %>% 
+  group_by(id_poliza) %>% 
+  dplyr::summarise(numero_siniestros = n(), monto_total_reclamos = sum(monto_siniestro))
+```
+
+Unimos el data frame de la cartera al de los siniestros.
+
+```{r}
+
+model_data <- left_join(asegurados, siniestros, by = 'id_poliza')
+```
+
+##Análisis exploratorio de datos
+
+```{r}
+model_data %>% ggplot(aes(y = suma_asegurada)) + geom_boxplot(outlier.shape = NA)
+```
+
+
+
+Vamos a ver ahora graficamente como se distribuyen los montos de las sumas aseguradas:
+
+```{r,  warning = FALSE, message=FALSE}
+asegurados  %>% 
+ggplot(aes(x = log(sumaseg))) +
+    geom_histogram(position="identity", 
+                   fill = "blue",
+                   alpha = 0.5
+                   ) +
+  labs(title = "Suma Asegurada por póliza", x = "Suma Asegurada en  Bs.S",
+                   y = "Frecuencia") +
+  theme(
+    panel.background = element_rect(fill = "#F5F6E6",
+                                colour = "#F5F6E6",
+                                size = 0.5, linetype = "solid"),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_line(size = 0.5, 
+                                    linetype = 'solid',
+                                    colour = "white") 
+    )
+```
+
+Veamos las estadísticas descriptivas de estos datos:
+
+```{r, warning = FALSE, message=FALSE}
+knitr::kable(
+asegurados %>% 
+  select(sumaseg) %>% 
+  summary()
+)
+```
+
+Como podemos notar los datos se encuentran muy dispersos, el rango entre las sumas aseguradas es igual `r max(asegurados$sumaseg) - min(asegurados$sumaseg)`, esto debido a la inflación que experimenta Venezuela.
+
+Ahora veamos como se graficamente la distribución de los siniestros:
+
+ ggplot(insured_exposed,aes(x = claim_frequency)) + 
+  geom_histogram(fill = "blue", alpha = 0.2)
+
+
+
+
+```{r}
+siniestros  %>% 
+ggplot(aes(x = pagado)) +
+    geom_histogram(position="identity", 
+                   fill = "#019FAA",
+                   alpha = 0.5
+                   ) +
+  labs(title = "Siniestros pagados", x = "Siniestros pagados en Bs.S",
+                   y = "Frecuencia") +
+  theme(
+    panel.background = element_rect(fill = "#F5F6E6",
+                                colour = "#F5F6E6",
+                                size = 0.5, linetype = "solid"),
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_line(size = 0.5, 
+                                    linetype = 'solid',
+                                    colour = "white")
+  )
+```
+
+
+En los siniestros vemos un  comportamiento similiar a las sumas aseguradas por la inflación, por lo que debemos realizar un ajuste por inflación a los datos.
+
+Dado a que no se manejan cifras oficiales del Índice de Precios al Consumidor (IPC) para los años 2017 y 2018, usaremos la variación mensual del monto promedio de los siniestros como un indicador de inflación.
+```{r}
+inflacion <- siniestros %>% 
+  select (emisionid, pagado) %>% 
+  mutate(año = year(emisionid), mes = month(emisionid)) %>% 
+  group_by(año,mes) %>% 
+  summarize(media = mean(pagado, na.rm = TRUE)) %>% 
+  arrange(año, mes) %>% 
+  ungroup() %>% 
+  mutate(var = media / lag(media) -1,
+         cum_var = media/first(media)-1
+         )
+knitr::kable(inflacion)
+```
+
+Ahora actualizaremos los valores tanto de los montos como de los siniestros de acuerdo a la inflación calculada.
+
+Seleccionaremos para nuestros calculos solo aquellas pólizas emitidas entre las fechas del primero de septiembre de 2017 y el 31 de agosto de 2018.
+
+```{r}
+asegurados <- asegurados %>% filter(fechadesde >='2017-09-01' & fechadesde < '2018-09-01')
+```
+
+```{r}
+asegurados <- 
+asegurados %>%
+  mutate(año = year(fechadesde), mes = month(fechadesde))  %>% 
+  inner_join(inflacion %>% 
+               select(año, mes, cum_var), 
+             by = c('año','mes')
+             ) %>% 
+  mutate(valor_actual_sumaseg= sumaseg * (1 + cum_var))
+```
+ 
+
+
+
+
+
+
+
+
+
+

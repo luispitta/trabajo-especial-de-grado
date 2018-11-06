@@ -1,0 +1,489 @@
+
+<!-- saved from url=(0054)http://onlinestatbook.com/2/transformations/tukey.html -->
+<html><!-- InstanceBegin template="/Templates/section template.dwt" codeOutsideHTMLIsLocked="false" --><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><style class="darkreader darkreader--fallback" media="screen"></style><style class="darkreader darkreader--text" media="screen"></style><style class="darkreader darkreader--invert" media="screen"></style><style class="darkreader darkreader--inline" media="screen">[data-darkreader-inline-bgcolor] {
+  background-color: var(--darkreader-inline-bgcolor) !important;
+}
+[data-darkreader-inline-bgimage] {
+  background-image: var(--darkreader-inline-bgimage) !important;
+}
+[data-darkreader-inline-border] {
+  border-color: var(--darkreader-inline-border) !important;
+}
+[data-darkreader-inline-border-bottom] {
+  border-bottom-color: var(--darkreader-inline-border-bottom) !important;
+}
+[data-darkreader-inline-border-left] {
+  border-left-color: var(--darkreader-inline-border-left) !important;
+}
+[data-darkreader-inline-border-right] {
+  border-right-color: var(--darkreader-inline-border-right) !important;
+}
+[data-darkreader-inline-border-top] {
+  border-top-color: var(--darkreader-inline-border-top) !important;
+}
+[data-darkreader-inline-boxshadow] {
+  box-shadow: var(--darkreader-inline-boxshadow) !important;
+}
+[data-darkreader-inline-color] {
+  color: var(--darkreader-inline-color) !important;
+}
+[data-darkreader-inline-fill] {
+  fill: var(--darkreader-inline-fill) !important;
+}
+[data-darkreader-inline-stroke] {
+  stroke: var(--darkreader-inline-stroke) !important;
+}
+[data-darkreader-inline-outline] {
+  outline-color: var(--darkreader-inline-outline) !important;
+}</style><style class="darkreader darkreader--user-agent" media="screen">html {
+    background-color: #17181c !important;
+}
+html, body, input, textarea, select, button {
+    background-color: #17181c;
+}
+html, body, input, textarea, select, button {
+    border-color: #575757;
+    color: #e8e7e3;
+}
+a {
+    color: #3391ff;
+}
+table {
+    border-color: #4c4c4c;
+}
+::placeholder {
+    color: #b9b4ac;
+}
+::selection {
+    background-color: #005ccc;
+    color: #ffffff;
+}
+::-moz-selection {
+    background-color: #005ccc;
+    color: #ffffff;
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: #545b00 !important;
+    color: #e8e7e3 !important;
+}
+::-webkit-scrollbar {
+    background-color: #1b1c21;
+    color: #c4c0ba;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #252a33;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #2a323e;
+}
+::-webkit-scrollbar-thumb:active {
+    background-color: #303d4f;
+}
+::-webkit-scrollbar-corner {
+    background-color: #17181c;
+}</style>
+<!-- #BeginEditable "doctitle" -->
+<title>Tukey Ladder of Powers</title>
+<script type="text/javascript">
+var animating=false
+var iTukey=2
+var lamdaUrl= new Array("2","1p5","1","p5","0","mp5","m1","m1p5","m2")
+var lamda= new Array(2,1.5,1,.5,0,-.5,-1,-1.5,-2)
+function animate(inc) {
+	iTukey+=inc
+	var theUrl="graphics/tukey_animation/fusion"+lamdaUrl[iTukey]+".jpg"
+	//alert(i + " " + theUrl)
+	document.getElementById("graph").src=theUrl
+	if(iTukey>0) document.getElementById("tb2").disabled=false
+	if(iTukey<8) document.getElementById("tb1").disabled=false
+	var d=document.getElementById("tb2").disabled
+	if(iTukey ==8) document.getElementById("tb1").disabled=true
+	if(iTukey==0) document.getElementById("tb2").disabled=true
+	
+}
+</script>
+<!-- #EndEditable -->
+
+<link rel="stylesheet" href="./Tukey Ladder of Powers_files/mmstat.css" type="text/css"><style class="darkreader darkreader--sync" media="screen">.oneColFixCtr #container {
+    background-image: initial;
+    background-color: #17181c;
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+}
+.div1 {
+    border-top-color: #0000cc;
+    border-right-color: #0000cc;
+    border-bottom-color: #0000cc;
+    border-left-color: #0000cc;
+}
+.dataTable2 {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    background-color: #17181c;
+}
+.dataTable2 th {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    background-color: #432a08;
+}
+.dataTable2 td {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    background-color: #17181c;
+}
+.dataTable1 {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    background-color: #17181c;
+}
+.dataTable1 th {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    background-color: #432a08;
+}
+.dataTable1 td {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    background-color: #17181c;
+}
+.back {
+    background-color: #1b1d22;
+}
+.sectiontitle {
+    color: #ff3333;
+}
+.caption {
+    background-color: #3f4700;
+}
+.section1 {
+    color: #e8e7e3;
+}
+.objectives {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+}
+.mainTable {
+    background-color: #1b1d22;
+}
+.main {
+    background-color: #17181c;
+}
+.figure {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    background-color: #3f4700;
+}
+.figure2 {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+    background-color: #3f4700;
+}
+.caution {
+    color: #ff3333;
+}
+.dataTableXX {
+    background-color: #17181c;
+    border-top-color: initial;
+    border-right-color: initial;
+    border-bottom-color: initial;
+    border-left-color: initial;
+}
+.caution {
+    color: #ff3333;
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+}
+.main {
+    background-color: #17181c;
+}
+.link {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+}
+.optional {
+    border-top-color: initial;
+    border-right-color: initial;
+    border-bottom-color: initial;
+    border-left-color: initial;
+    color: #c2beb7;
+}
+.prerequisitetitle {
+    color: #e8e7e3;
+}
+.keywordtitle {
+    color: #e8e7e3;
+}
+.glossary {
+    background-color: #525200;
+}
+.important {
+    color: #ff3333;
+}
+.definition {
+    background-color: #23272f;
+}
+.old_thead {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+}
+.example {
+    border-top-color: #666666;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    border-left-color: #666666;
+}
+.red {
+    color: #ff3333;
+}
+.dataTableBig {
+    background-color: #17181c;
+}
+.audio {
+    color: #ffffff;
+}
+.whitebg {
+    background-color: #17181c;
+}
+.whitebg2 {
+    background-color: #17181c;
+}
+.questionX {
+    background-color: #1b1d22;
+}
+.buttonX {
+    background-color: #005252;
+}
+.whitebg {
+    background-color: #17181c;
+}
+.dataTableA {
+    background-color: #17181c;
+}
+.innerTable {
+    border-top-color: initial;
+    border-right-color: initial;
+    border-bottom-color: initial;
+    border-left-color: initial;
+}
+#div-nav {
+    border-right-color: #666666;
+}
+#div-1L {
+    border-right-color: #666666;
+}</style>
+<script language="JavaScript" src="./Tukey Ladder of Powers_files/stat.js"></script><style class="darkreader darkreader--override" media="screen"></style>
+<script language="JavaScript" src="./Tukey Ladder of Powers_files/question.js"></script>
+<script language="JavaScript" src="./Tukey Ladder of Powers_files/nav.js"></script>
+<script language="JavaScript">
+  var leftNav=false
+  var chapterIndex
+  var sectionIndex
+  
+</script>
+</head>
+
+<body class="back" onload="loaded()" bgcolor="#FFFFFF" data-darkreader-inline-bgcolor="" style="--darkreader-inline-bgcolor:#17181c;">
+<form name="form1" onsubmit="return checkAnswers()">
+  <!-- #BeginEditable "settings" -->
+      <input name="chapter" id="chapter_name" type="hidden" value="Transformations">
+  <input name="section" type="hidden" value="Tukey Ladder of Powers" id="section_name">
+<input type="hidden" name="mode" id="mode" value="s">
+      <input name="questions" id="questions" type="hidden" value="tukey.xml">
+       <input id="novideo" type="hidden">
+
+  <!-- #EndEditable -->
+
+<table class="mainTable" cellspacing="0" align="center" id="mainTable">
+
+
+
+  <tbody><tr> 
+    <td> 
+        <table class="main" cellspacing="0" cellpadding="16" align="center" id="main">
+        <script language="javascript">tableWidth()</script>
+          <tbody><tr>        
+              <td valign="top">
+				<script language="JavaScript">            
+                  insertNavLeft()            
+                </script></td><td valign="top" class="prelim"><div id="contents" class="firstp" style="background-color: white; --darkreader-inline-bgcolor:#17181c;" data-darkreader-inline-bgcolor=""><a href="http://onlinestatbook.com/2/index.html">Home</a><br><br><ol class="upper_roman notop0"><li><a href="javascript:displayContents(1)">Introduction</a></li><li><a href="javascript:displayContents(2)">Graphing Distributions</a></li><li><a href="javascript:displayContents(3)">Summarizing Distributions</a></li><li><a href="javascript:displayContents(4)">Describing Bivariate Data</a></li><li><a href="javascript:displayContents(5)">Probability</a></li><li><a href="javascript:displayContents(6)">Research Design</a></li><li><a href="javascript:displayContents(7)">Normal Distribution</a></li><li><a href="javascript:displayContents(8)">Advanced Graphs</a></li><li><a href="javascript:displayContents(9)">Sampling Distributions</a></li><li><a href="javascript:displayContents(10)">Estimation</a></li><li><a href="javascript:displayContents(11)">Logic of Hypothesis Testing</a></li><li><a href="javascript:displayContents(12)">Tests of Means</a></li><li><a href="javascript:displayContents(13)">Power</a></li><li><a href="javascript:displayContents(14)">Regression</a></li><li><a href="javascript:displayContents(15)">Analysis of Variance</a></li><br><li>Transformations</li><ol class="notop0"><li class="section_list">Contents<a href="http://onlinestatbook.com/2/transformations/contents.html"><br>Standard</a> </li><li class="section_list">Log Transformations<a href="http://onlinestatbook.com/2/transformations/log.html"><br>Standard</a>&nbsp;&nbsp;<a href="http://onlinestatbook.com/2/transformations/logM.html"> Video</a> </li><li class="red section_list">Tukey Ladder of Powers<br>Standard&nbsp;&nbsp;</li><li class="section_list">Box-Cox<a href="http://onlinestatbook.com/2/transformations/box-cox.html"><br>Standard</a>&nbsp;&nbsp;<a href="http://onlinestatbook.com/2/transformations/box-coxM.html"> Video</a> </li><li class="section_list">Statistical Literacy<a href="http://onlinestatbook.com/2/transformations/transformationsSA.html"><br>Standard</a> </li><li class="section_list">Exercises<a href="http://onlinestatbook.com/2/transformations/exercises.html"><br>Standard</a> </li><br></ol><li><a href="javascript:displayContents(17)">Chi Square</a></li><li><a href="javascript:displayContents(18)">Distribution Free Tests</a></li><li><a href="javascript:displayContents(19)">Effect Size</a></li><li><a href="javascript:displayContents(20)">Case Studies</a></li><li><a href="javascript:displayContents(21)">Calculators</a></li><li><a href="javascript:displayContents(22)">Glossary</a></li></ol></div></td><td class="stripe">&nbsp;</td> 
+               
+          
+          
+		  <td valign="top"> 
+          		<div id="navTop">Chapter: <select id="chapter" onchange="chapterIndex = this.selectedIndex;changeChapter()" class="nav"><option>Front</option><option>1. Introduction</option><option>2. Graphing Distributions</option><option>3. Summarizing Distributions</option><option>4. Describing Bivariate Data</option><option>5. Probability</option><option>6. Research Design</option><option>7. Normal Distribution</option><option>8. Advanced Graphs</option><option>9. Sampling Distributions</option><option>10. Estimation</option><option>11. Logic of Hypothesis Testing</option><option>12. Tests of Means</option><option>13. Power</option><option>14. Regression</option><option>15. Analysis of Variance</option><option selected="">16. Transformations</option><option>17. Chi Square</option><option>18. Distribution Free Tests</option><option>19. Effect Size</option><option>20. Case Studies</option><option>21. Calculators</option><option>22. Glossary</option></select> &nbsp;Section: <select id="section" onchange="sectionIndex = this.selectedIndex;changeSection()" class="nav"><option>Contents</option><option>Log Transformations</option><option selected="">Tukey Ladder of Powers</option><option>Box-Cox</option><option>Statistical Literacy</option><option>Exercises</option></select><br><p><a href="http://onlinestatbook.com/2/index.html">Home</a> |  <a href="javaScript:goPrev()">Previous Section</a> &nbsp;|&nbsp; <a href="javaScript:goNext()">Next Section</a></p>No video available for this section.<br><br></div>
+          		
+                
+                
+         
+ 			<!-- #BeginEditable "title" --> 
+              <p class="sectiontitle">Tukey's Ladder of Powers</p>
+			  
+			  
+            <!-- #EndEditable --> 
+            <p class="author"> Author(s)</p>
+            <!-- InstanceBeginEditable name="author" -->
+            
+            David Scott<!-- InstanceEndEditable -->
+            
+            
+<p class="prerequisite">Prerequisites</p>
+                <!-- #BeginEditable "prerequisites" --><a href="http://onlinestatbook.com/2/describing_bivariate_data/intro.html">Bivariate Data</a>, <a href="http://onlinestatbook.com/2/describing_bivariate_data/pearson.html">Pearson Correlation</a>, <a href="http://onlinestatbook.com/2/introduction/logarithms.html">Logarithms</a>, <a href="http://onlinestatbook.com/2/power/intro_power.html">Introduction to Power</a>, <a href="http://onlinestatbook.com/2/tests_of_means/difference_means.html">Independent Groups t Test</a>
+                
+                <br><br>
+			  <span class="prerequisitetitle">Learning Objectives</span><ol class="notop">
+      <li>Give the Tukey ladder of transformations</li>
+      <li>Find a transformation that reveals a linear relationship</li>
+      <li>Find a transformation to approximate a normal distribution</li>
+			  </ol>
+              <!-- #EndEditable -->
+              
+			  
+
+             <!-- #BeginEditable "content" -->
+             <p class="section2">Introduction</p>
+             <p class="firstp">We assume we have a collection of bivariate data</p>
+             <p class="equation"> (x<sub>1</sub>,y<sub>1</sub>),(x<sub>2</sub>,y<sub>2</sub>),...,(x<sub>n</sub>,y<sub>n</sub>) </p>
+             <p class="firstp">and that we are interested in the relationship between variables x and y. Plotting the data on a scatter diagram is the first step. As an example, consider the population of the United States for the 200 years before the Civil War. Of course, the decennial census began in 1790. These data are plotted two ways in Figure 1. Malthus predicted that geometric growth of populations coupled with arithmetic growth of grain production would have catastrophic results. Indeed the US population followed an exponential curve during this period.</p>
+             <div class="figureHolder"> <img src="./Tukey Ladder of Powers_files/population_growth.jpg" alt="population growth" width="563" height="271" border="0">
+               <p class="tableTitle" style="width:570"> Figure 1. The US population from 1670 - 1860. The Y axis on the right panel is on a log scale.</p>
+               
+             </div>
+             
+             <p class="section2">Tukey's Transformation Ladder</p>
+             <p class="firstp">Tukey (1977) describes an orderly way of re-expressing variables using a power transformation. You may be familiar with polynomial regression (a form of <a href="http://onlinestatbook.com/2/regression/multiple_regression.html">multiple regression</a>) in which the simple linear model y = b<sub>0</sub> + b<sub>1</sub>X  is extended with terms such as b<sub>2</sub>X<sup>2</sup> +  b<sub>3</sub>X<sup>3</sup> +  b<sub>4</sub>X<sup>4</sup>.  Alternatively, Tukey suggests exploring simple relationships such as</p>
+             <p class="equation">y = b<sub>0</sub> +  b<sub>1</sub>X<sup>&#955;</sup> or y<sup>&#955;</sup> = b<sub>0</sub> +  b<sub>1</sub>X (Equation 1)</p>
+             <p class="firstp">where &#955; is a parameter chosen to make the relationship as close to a straight line as possible. <a href="javaScript:glossary(&#39;linear_relationship&#39;)" title="Definition in a new window." class="term">Linear 
+  relationships</a> are special, and if a transformation of the type x<sup>&#955;</sup> or y<sup>&#955;</sup> works as in Equation (1), then we should consider changing our measurement scale for the rest of the statistical analysis.</p>
+             <p class="para">There is no constraint on values of &#955; that we may consider. Obviously choosing &#955; = 1 leaves the data unchanged. Negative values of &#955; are also reasonable. For example, the relationship</p>
+             <p class="equation">y = b<sub>0</sub> + b<sub>1</sub>/x
+             </p><p class="firstp">would be represented by &#955; = &#8722;1. The value &#955; = 0 has no special value, since X<sup>0</sup> = 1, which is just a constant. Tukey (1977) suggests that it is convenient to simply define the transformation when &#955; = 0 to be the <a href="javaScript:glossary(&#39;log&#39;)">logarithm</a> function rather than the constant 1. We shall revisit this convention shortly. The following table gives examples of the Tukey ladder of transformations.<br>
+             </p>
+             <div class="tableHolder350">
+               <p class="firstp">Table 1. Tukey's Ladder of Transformations
+            <img src="./Tukey Ladder of Powers_files/tukey_ladder.jpg" width="515" height="109" alt="tukey ladder"> </p></div>
+             <p class="para">If x takes on negative values, then special care must be taken so that the transformations make sense, if possible. We generally limit ourselves to variables where x &gt; 0 to avoid these considerations. For some <a href="javaScript:glossary(&#39;dependent_variable&#39;)" title="Definition in a new window." class="term">dependent 
+  variables</a> such as the number of errors, it is convenient to add 1 to x before applying the transformation.</p>
+             <p class="para">Also, if the transformation parameter &#955; is negative, then the transformed variable x<sup>&#955;</sup> is reversed. For example, if x is increasing, then 1/x is decreasing. We choose to redefine the Tukey transformation to be -x<sup>&#955;</sup> if &#955; &lt; 0 in order to preserve the order of the variable after transformation. Formally, the Tukey transformation is defined as <a name="eq2"></a></p>
+             <div class="tableHolder550">
+               <p class="equation"><img src="./Tukey Ladder of Powers_files/tukeyr.jpg" alt="tukey ladder" width="361" height="177" align="absmiddle"> &nbsp;Equation 2
+             </p></div>
+             <p class="firstp">In Table 2 we reproduce Table 1  using the modified definition when &#955; &lt; 0.<br>
+               <br>
+             </p>
+             <div class="tableHolder450">
+               <p class="firstp">Table 2. Modified Tukey's Ladder of Transformations <img src="./Tukey Ladder of Powers_files/tukey_ladder2.jpg" width="526" height="118" alt="tukey ladder">                
+             </p></div>
+             
+             
+             <p class="section2">The Best Transformation for Linearity</p>
+             <p class="firstp">The goal is to find a value of &#955; that makes the scatter diagram as linear as possible. For the US population, the logarithmic transformation applied to y makes the relationship almost perfectly linear. The red dashed line in the right frame of Figure 1 has a slope of about 1.35; that is, the US population grew at a rate of about 35% per decade.</p>
+             <p class="para">The logarithmic transformation corresponds to the choice &#955; = 0 by Tukey's convention. In Figure 2, we display the scatter diagram of the US population data for &#955; = 0 as well as for other choices of &#955;.</p>
+             <div class="figureHolder"> <img src="./Tukey Ladder of Powers_files/various_lambdas.jpg" alt="population growth" width="649" height="318" border="0">
+               <p class="tableTitle" style="width:570"> Figure 2. The US population from 1670 to 1860 for various values of &#955;.</p>
+             </div>
+             <p class="firstp">The raw data are plotted in the bottom right frame of Figure 2 when <span class="para">&#955;</span> = 1. The logarithmic fit is in the upper right frame when <span class="para">&#955;</span> = 0. Notice how the scatter diagram smoothly morphs from  convex to concave as <span class="para">&#955;</span> increases. Thus intuitively there is a unique best choice of <span class="para">&#955;</span> corresponding to the "most linear" graph.</p>
+             <p class="para">One way to make this choice objective is to use an objective function for this purpose. One approach might be to fit a straight line to the transformed points and try to minimize the residuals. However, an easier approach is based on the fact that the <a href="javaScript:glossary(&#39;pearson_r&#39;)" title="Definition in a new window." class="term">correlation coefficient, r, </a> is a measure of the linearity of a scatter diagram. In particular, if the points fall on a straight line then their correlation will be r = 1. (We need not worry about the case when r = &#8722;1 since we have defined the Tukey transformed variable x<sub>&#955;</sub> to be positively correlated with x itself.)</p>
+             <p class="para">In Figure 3, we plot the correlation coefficient of the scatter diagram (x,y<sub>&#955;</sub>) as a function of &#955;. It is clear that the logarithmic transformation (&#955; = 0) is nearly optimal by this criterion.</p>
+             <div class="figureHolder"> <img src="./Tukey Ladder of Powers_files/r_lambda_function.jpg" alt="population growth" width="664" height="310" border="0">
+               <p class="tableTitle" style="width:570"> Figure 3. Graph of US population correlation coefficient as function of &#955;.</p>
+             </div>
+             <p class="para">Is the US population still on the same exponential growth pattern? In Figure 4, we display the US population from 1630 to 2000 using the transformation and fit used in the right frame of Figure 1. Fortunately, the exponential growth (or at least its rate) was not sustained into the Twentieth Century. If it had, the US population in the year 2000 would have been over 2 billion (2.07 to be exact), larger than the population of China.</p>
+             <div class="figureHolder"> <img src="./Tukey Ladder of Powers_files/uspop_long.jpg" alt="population growth" width="644" height="311" border="0">
+               <p class="tableTitle" style="width:570"> Figure 4. Graph of US population 1630-2000 with &#955; = 0.</p>
+             </div>
+             <p class="para">We can examine the decennial census population figures of individual states as well. In Figure 5, we display the population data for the state of New York from 1790 to 2000, together with an estimate of the population in 2008. Clearly something unusual happened starting in 1970. (This began the period of mass migration to the West and South as the rust belt industries began to shut down.) Thus, we compute the best &#955; value using the data from 1790-1960 in the middle frame of Figure 5. The right frame displays the transformed data, together with the linear fit for the 1790-1960 period. The  value of &#955; = 0.41 is not obvious and one might reasonably choose to use &#955; = 0.50 for practical reasons.</p>
+             <div class="figureHolder"> <img src="./Tukey Ladder of Powers_files/ny.jpg" alt="population growth" width="663" height="237" border="0">
+               <p class="tableTitle" style="width:570"> Figure 5. Graphs related to the New York state population 1790-2008.</p></div>
+             <p class="para">If we look at one of the younger states in the West, the picture is different. Arizona has attracted many retirees and immigrants. Figure 6 summarizes our findings. Indeed, the growth of population in Arizona is logarithmic, and appears to still be logarithmic through 2005.</p>
+             <div class="figureHolder"> <img src="./Tukey Ladder of Powers_files/arizona.jpg" alt="population growth" width="648" height="237" border="0">
+               <p class="tableTitle" style="width:570"> Figure 6. Graphs related to the Arizona state population 1910-2005.</p>
+             </div>
+             <p class="section2">Reducing Skew</p>
+             <p class="firstp">Many statistical methods such as t tests and the analysis of variance  assume <a href="javaScript:glossary(&#39;normal_distribution&#39;)" title="Definition in a new window." class="term">normal distributions</a>. Although these methods are relatively <a href="javaScript:glossary(&#39;robust&#39;)" title="Definition in a new window." class="term">robust</a> to violations of normality, transforming the distributions to reduce skew can markedly increase their <a href="javaScript:glossary(&#39;power&#39;)" title="Definition in a new window." class="term">power</a>.  </p>
+             <p class="para">As an example, the data in the "<a href="http://onlinestatbook.com/2/case_studies/stereograms.html">Stereograms</a>" case study are very skewed. A <a href="javaScript:glossary(&#39;t_test&#39;)">t test</a> of the difference between the two conditions using the raw data results in a <a href="javaScript:glossary(&#39;probability_value&#39;)" title="Definition in a new window." class="term"> p value</a> of 0.056, a value not conventionally considered  <a href="javaScript:glossary(&#39;significance_testing&#39;)" title="Definition in a new window." class="term">significant</a>. However, after a log transformation (&#955; = 0) that reduces the skew greatly, the p value is 0.023 which is conventionally considered significant.
+             </p>
+             <p class="para">The demonstration in Figure 7 shows distributions of the data from the Stereograms case study as transformed with various values of &#955;. Decreasing &#955; makes the distribution less positively skewed. Keep in mind that &#955; = 1 is the raw data. Notice that there is a slight positive skew for &#955; = 0 but much less skew than found in the raw data (&#955; = 1). Values of below 0 result in negative skew.</p>
+             <div class="figureHolder">
+             <img src="./Tukey Ladder of Powers_files/fusion1.jpg" width="231" height="134" align="top" id="graph"><br>
+				<input type="button" name="button" value="Decrease &#955;" id="tb1" onclick="animate(1)">
+                  <input type="button" name="button" value="Increase &#955;" id="tb2" onclick="animate(-1) ">
+                 <br>
+  				
+             
+             </div>     
+               <p class="tableTitle" style="width:500"> Figure 7. Distribution of data from the Stereograms case study for various values of  &#955; (push buttons to change <span class="para">&#955;</span>). The starting point is the raw data (&#955; = 1).</p>
+             
+             <p class="section2"><br>
+             References</p>
+                  
+             <p class="reference">Tukey, J. W. (1977). <em>Exploratory Data Analysis</em>. Addison-Wesley, Reading, MA.</p>
+             <p class="para">&nbsp;</p>
+             <!-- #EndEditable --> 
+       
+         
+               <div id="display" class="questionX"><p class="question"><b>Question 1 out of 2.</b><br>
+	A log transformation of X will result in a linear relationship between X and Log(Y) if
+	<br><br><input type="radio" name="rrr" value="true" id="0"> the propotional increase in Y is the same for a change of 1 in X across the range of X's.<br><br><input type="radio" name="rrr" value="false" id="1"> the relatoionship between X and Y is linear.<br><br><input type="radio" name="rrr" value="false" id="2"> there is a high correlation between X and Y.<br><br></p></div>
+<div class="buttonX" id="question_buttons">
+	<input name="" type="button" value="Check Answer" onclick="checkAnswers()" id="b3">
+	<input name="" type="button" value="Previous Question" onclick="previous()" id="b1" disabled="">
+	<input name="" type="button" value="Next Question" onclick="next()" id="b2">
+	<input name="" type="button" value="Similar Question" id="similar" onclick="showQuestion()" style="visibility: hidden;">
+</div>       
+
+<div id="feedback" class="buttonX"></div>
+
+<div id="bottomOfPage"> <a href="javaScript:goPrev()">Previous Section</a> &nbsp;|&nbsp; <a href="javaScript:goNext()">Next Section</a></div>
+              
+<!-- #BeginEditable "extra" -->
+
+
+<!-- #EndEditable -->
+			  
+			  						
+			</td>
+          </tr>
+  </tbody></table>
+    </td>
+  </tr>
+</tbody></table>
+</form>
+
+<script src="./Tukey Ladder of Powers_files/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-141388-4";
+urchinTracker();
+</script>
+
+
+<!-- InstanceEnd -->
+</body></html>

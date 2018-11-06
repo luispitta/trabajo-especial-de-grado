@@ -53,3 +53,213 @@ Archivos sin seguimiento:
 
 no hay nada agregado para confirmar, pero hay archivos sin seguimiento presentes
 ]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git com[K[K[Kadd. [K[K .
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git add .commit -m "trabajando en el codigo"
+[master (commit-raíz) 38c555e] trabajando en el codigo
+ 106 files changed, 50999 insertions(+)
+ create mode 100644 .RData
+ create mode 100644 .Rhistory
+ create mode 100644 .Rproj.user/870A3BC8/console06/INDEX001
+ create mode 100644 .Rproj.user/870A3BC8/pcs/files-pane.pper
+ create mode 100644 .Rproj.user/870A3BC8/pcs/source-pane.pper
+ create mode 100644 .Rproj.user/870A3BC8/pcs/windowlayoutstate.pper
+ create mode 100644 .Rproj.user/870A3BC8/pcs/workbench-pane.pper
+ create mode 100644 .Rproj.user/870A3BC8/rmd-outputs
+ create mode 100644 .Rproj.user/870A3BC8/saved_source_markers
+ create mode 100644 .Rproj.user/870A3BC8/sources/per/t/F2C6707E
+ create mode 100644 .Rproj.user/870A3BC8/sources/per/t/F2C6707E-contents
+ create mode 100644 .Rproj.user/870A3BC8/sources/prop/44B0E910
+ create mode 100644 .Rproj.user/870A3BC8/sources/prop/8C774683
+ create mode 100644 .Rproj.user/870A3BC8/sources/prop/A6390AA
+ create mode 100644 .Rproj.user/870A3BC8/sources/prop/E7CD7AB5
+ create mode 100644 .Rproj.user/870A3BC8/sources/prop/INDEX
+ create mode 100644 .Rproj.user/878DFBB5/console06/A1E83D05
+ create mode 100644 .Rproj.user/878DFBB5/console06/A1E83D05.env
+ create mode 100644 .Rproj.user/878DFBB5/console06/INDEX001
+ create mode 100644 .Rproj.user/878DFBB5/pcs/files-pane.pper
+ create mode 100644 .Rproj.user/878DFBB5/pcs/packages-pane.pper
+ create mode 100644 .Rproj.user/878DFBB5/pcs/source-pane.pper
+ create mode 100644 .Rproj.user/878DFBB5/pcs/windowlayoutstate.pper
+ create mode 100644 .Rproj.user/878DFBB5/pcs/workbench-pane.pper
+ create mode 100644 .Rproj.user/878DFBB5/rmd-outputs
+ create mode 100644 .Rproj.user/878DFBB5/saved_source_markers
+ create mode 100644 .Rproj.user/878DFBB5/sources/prop/4774E8A2
+ create mode 100644 .Rproj.user/878DFBB5/sources/prop/A70C6902
+ create mode 100644 .Rproj.user/878DFBB5/sources/prop/BBE0F04
+ create mode 100644 .Rproj.user/878DFBB5/sources/prop/C085298F
+ create mode 100644 .Rproj.user/878DFBB5/sources/prop/INDEX
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/1193522A-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/13076F20-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/2F32857B-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/3646A7C7-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/406664D9-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/52169961
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/52169961-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/534C60AE-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/5C966BFC-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/62E52B74-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/7384FDC4-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/765804D9-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/76DE3345-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/798EFB27
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/798EFB27-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/867D2E5D-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/9A4AD2A5-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/B13D5C5F-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/C4B5C3B7-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/C50C4683
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/C50C4683-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/CF971674-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/D3D13559-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/F28DED94-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/FACC603D-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/FD89E8FF-contents
+ create mode 100644 .Rproj.user/878DFBB5/sources/s-F77BFF59/lock_file
+ create mode 100644 .Rproj.user/878DFBB5/unsaved-notebooks/52169961/1/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/103D99F9-Untitled/1/s/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/9C8C18F1-Tesis de Prueba/1/870A3BC8357BF6F0/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/9C8C18F1-Tesis de Prueba/1/878DFBB587B4C594/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/9C8C18F1-Tesis de Prueba/1/s/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/B093D68A-Paper/1/878DFBB587B4C594/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/B093D68A-Paper/1/s/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/C0FC5E62-Tesis_de_Prueba_2/1/878DFBB587B4C594/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/C0FC5E62-Tesis_de_Prueba_2/1/s/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/patch-chunk-names
+ create mode 100644 .Rproj.user/shared/notebooks/paths
+ create mode 100644 Bibliografia Utilizada/BIB_FB452024BF1F.P001.pdf
+ create mode 100644 Bibliografia Utilizada/Competition_and_efficiency_in_the_non-life_insuran.pdf
+ create mode 100644 Bibliografia Utilizada/InsurSymposium.pdf
+ create mode 100644 Bibliografia Utilizada/Insurance Premium Prediction via Gradient Tree-Boosted Tweedie Compound Poisson Models.html
+ create mode 100644 Bibliografia Utilizada/Insurance Premium Prediction via Gradient Tree-Boosted Tweedie Compound Poisson Models_files/MathJax.js
+ create mode 100644 Bibliografia Utilizada/Insurance-Report-Executive-Summary.pdf
+ create mode 100644 Bibliografia Utilizada/JBES_TDboost.pdf
+ create mode 100644 Bibliografia Utilizada/Supplemental_material.pdf
+ create mode 100644 Bibliografia Utilizada/TD00297.pdf
+ create mode 100644 Bibliografia Utilizada/seguro-en-cifras-2016-estadistica_v3-pdf.pdf
+ create mode 100644 Bibliografia Utilizada/soa-in-insurance-industry-0-2-100414235436-phpapp02.pdf
+ create mode 100644 Paper.Rmd
+ create mode 100644 Paper.html
+ create mode 100644 Paper.log
+ create mode 100644 Paper.tex
+ create mode 100644 Tesis de Prueba.Rmd
+ create mode 100644 Tesis_de_Prueba.pdf
+ create mode 100644 Tesis_de_Prueba_2.Rmd
+ create mode 100644 Tesis_de_Prueba_2.html
+ create mode 100644 Tesis_de_Prueba_2.log
+ create mode 100644 Tesis_de_Prueba_2.tex
+ create mode 100644 Trabajo Especial de Grado.Rproj
+ create mode 100644 Untitled/DissertateUSU.cls
+ create mode 100755 Untitled/Untitled.Rmd
+ create mode 100644 Untitled/Untitled.log
+ create mode 100644 Untitled/Untitled.pdf
+ create mode 100644 Untitled/Untitled.tex
+ create mode 100644 Untitled/preamble.tex
+ create mode 100644 data/.~lock.data_auto.xlsx#
+ create mode 100644 data/.~lock.insured.csv#
+ create mode 100644 data/data_auto.xlsx
+ create mode 100644 data/insured.csv
+ create mode 100644 data/paid_claims.csv
+ create mode 100644 data/pending_claims.csv
+ create mode 100755 faces.png
+ create mode 100644 tesis_code.R
+ create mode 100755 ucvlogo.jpg
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git pus[K[K[K[K branch
+[?1h=* [32mmaster[m[m
+[K[?1l>]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ gri[K[Kit c[Kpuh[Ksh oringin[K[K[K[Kgin
+fatal: La rama actual master no tiene una rama upstream.
+Para realizar un push de la rama actual y configurar el remoto como upstream, use
+
+	git push --set-upstream origin master
+
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$  git push --set-upstream origin master
+fatal: 'origin' does not appear to be a git repository
+fatal: No se pudo leer del repositorio remoto.
+
+Por favor asegúrese que tiene los permisos de acceso correctos
+y que el repositorio existe.
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git push origin[C[K[K[K[K[K[K[K
+fatal: No se ha configurado un destino para el push.
+Puedes o especificar una URL desde la línea de comandos o configurar un repositorio remoto usando
+
+    git remote add <nombre> <url>
+
+y luego haciendo push al nombre del remoto
+
+    git push <nombre>
+
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git push m[Kori[K[K[Kmaster
+fatal: La rama actual master no tiene una rama upstream.
+Para realizar un push de la rama actual y configurar el remoto como upstream, use
+
+	git push --set-upstream master master
+
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git push master[K[K[K[K[K[Korigin masst[K[Kter}[K
+fatal: 'origin' does not appear to be a git repository
+fatal: No se pudo leer del repositorio remoto.
+
+Por favor asegúrese que tiene los permisos de acceso correctos
+y que el repositorio existe.
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git push origin masters master[C[C[C[C[C[C[C
+fatal: 'origins' does not appear to be a git repository
+fatal: No se pudo leer del repositorio remoto.
+
+Por favor asegúrese que tiene los permisos de acceso correctos
+y que el repositorio existe.
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ 
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git push origins master[K[K[K[K[K[K[K
+fatal: La rama actual master no tiene una rama upstream.
+Para realizar un push de la rama actual y configurar el remoto como upstream, use
+
+	git push --set-upstream origins master
+
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git push origins master
+fatal: 'origins' does not appear to be a git repository
+fatal: No se pudo leer del repositorio remoto.
+
+Por favor asegúrese que tiene los permisos de acceso correctos
+y que el repositorio existe.
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$  [Kbranch
+
+No se ha encontrado la orden «branch», pero se puede instalar con:
+
+sudo apt install rheolef
+
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git g[Kbranch
+[?1h=* [32mmaster[m[m
+[K[?1l>]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git push -u origin master
+fatal: 'origin' does not appear to be a git repository
+fatal: No se pudo leer del repositorio remoto.
+
+Por favor asegúrese que tiene los permisos de acceso correctos
+y que el repositorio existe.
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git remote add origin https://github.com/luispitta/trabajo-especial--de-grado.git
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git push -u origin master
+git: 'credential-Fraddido01'no es un comando de git. Mira 'git --help'.
+fatal: cannot run rpostback-askpass: No existe el archivo o el directorio
+Username for 'https://github.com': luispt itta
+fatal: cannot run rpostback-askpass: No existe el archivo o el directorio
+Password for 'https://luispitta@github.com': 
+git: 'credential-Fraddido01'no es un comando de git. Mira 'git --help'.
+Contando objetos: 116, listo.
+Delta compression using up to 4 threads.
+Comprimiendo objetos:   1% (1/94)   Comprimiendo objetos:   2% (2/94)   Comprimiendo objetos:   3% (3/94)   Comprimiendo objetos:   4% (4/94)   Comprimiendo objetos:   5% (5/94)   Comprimiendo objetos:   6% (6/94)   Comprimiendo objetos:   7% (7/94)   Comprimiendo objetos:   8% (8/94)   Comprimiendo objetos:   9% (9/94)   Comprimiendo objetos:  10% (10/94)   Comprimiendo objetos:  11% (11/94)   Comprimiendo objetos:  12% (12/94)   Comprimiendo objetos:  13% (13/94)   Comprimiendo objetos:  14% (14/94)   Comprimiendo objetos:  15% (15/94)   Comprimiendo objetos:  17% (16/94)   Comprimiendo objetos:  18% (17/94)   Comprimiendo objetos:  19% (18/94)   Comprimiendo objetos:  20% (19/94)   Comprimiendo objetos:  21% (20/94)   Comprimiendo objetos:  22% (21/94)   Comprimiendo objetos:  23% (22/94)   Comprimiendo objetos:  24% (23/94)   Comprimiendo objetos:  25% (24/94)   Comprimiendo objetos:  26% (25/94)   Comprimiendo objetos:  27% (26/94)   Comprimiendo objetos:  28% (27/94)   Comprimiendo objetos:  29% (28/94)   Comprimiendo objetos:  30% (29/94)   Comprimiendo objetos:  31% (30/94)   Comprimiendo objetos:  32% (31/94)   Comprimiendo objetos:  34% (32/94)   Comprimiendo objetos:  35% (33/94)   Comprimiendo objetos:  36% (34/94)   Comprimiendo objetos:  37% (35/94)   Comprimiendo objetos:  38% (36/94)   Comprimiendo objetos:  39% (37/94)   Comprimiendo objetos:  40% (38/94)   Comprimiendo objetos:  41% (39/94)   Comprimiendo objetos:  42% (40/94)   Comprimiendo objetos:  43% (41/94)   Comprimiendo objetos:  44% (42/94)   Comprimiendo objetos:  45% (43/94)   Comprimiendo objetos:  46% (44/94)   Comprimiendo objetos:  47% (45/94)   Comprimiendo objetos:  48% (46/94)   Comprimiendo objetos:  50% (47/94)   Comprimiendo objetos:  51% (48/94)   Comprimiendo objetos:  52% (49/94)   Comprimiendo objetos:  53% (50/94)   Comprimiendo objetos:  54% (51/94)   Comprimiendo objetos:  55% (52/94)   Comprimiendo objetos:  56% (53/94)   Comprimiendo objetos:  57% (54/94)   Comprimiendo objetos:  58% (55/94)   Comprimiendo objetos:  59% (56/94)   Comprimiendo objetos:  60% (57/94)   Comprimiendo objetos:  61% (58/94)   Comprimiendo objetos:  62% (59/94)   Comprimiendo objetos:  63% (60/94)   Comprimiendo objetos:  64% (61/94)   Comprimiendo objetos:  65% (62/94)   Comprimiendo objetos:  67% (63/94)   Comprimiendo objetos:  68% (64/94)   Comprimiendo objetos:  69% (65/94)   Comprimiendo objetos:  70% (66/94)   Comprimiendo objetos:  71% (67/94)   Comprimiendo objetos:  72% (68/94)   Comprimiendo objetos:  73% (69/94)   Comprimiendo objetos:  74% (70/94)   Comprimiendo objetos:  75% (71/94)   Comprimiendo objetos:  76% (72/94)   Comprimiendo objetos:  77% (73/94)   Comprimiendo objetos:  78% (74/94)   Comprimiendo objetos:  79% (75/94)   Comprimiendo objetos:  80% (76/94)   Comprimiendo objetos:  81% (77/94)   Comprimiendo objetos:  82% (78/94)   Comprimiendo objetos:  84% (79/94)   Comprimiendo objetos:  85% (80/94)   Comprimiendo objetos:  86% (81/94)   Comprimiendo objetos:  87% (82/94)   Comprimiendo objetos:  88% (83/94)   Comprimiendo objetos:  89% (84/94)   Comprimiendo objetos:  90% (85/94)   Comprimiendo objetos:  91% (86/94)   Comprimiendo objetos:  92% (87/94)   Comprimiendo objetos:  93% (88/94)   Comprimiendo objetos:  94% (89/94)   Comprimiendo objetos:  95% (90/94)   Comprimiendo objetos:  96% (91/94)   Comprimiendo objetos:  97% (92/94)   Comprimiendo objetos:  98% (93/94)   Comprimiendo objetos: 100% (94/94)   Comprimiendo objetos: 100% (94/94), listo.
+Escribiendo objetos:   0% (1/116)   Escribiendo objetos:   1% (2/116)   Escribiendo objetos:   2% (3/116)   Escribiendo objetos:   3% (4/116)   Escribiendo objetos:   4% (5/116)   Escribiendo objetos:   5% (6/116)   Escribiendo objetos:   6% (7/116)   Escribiendo objetos:   7% (9/116)   Escribiendo objetos:   8% (10/116)   Escribiendo objetos:   9% (11/116)   Escribiendo objetos:  10% (12/116)   Escribiendo objetos:  11% (13/116)   Escribiendo objetos:  12% (14/116)   Escribiendo objetos:  13% (16/116)   Escribiendo objetos:  14% (17/116)   Escribiendo objetos:  15% (18/116)   Escribiendo objetos:  16% (19/116)   Escribiendo objetos:  18% (21/116)   Escribiendo objetos:  19% (23/116)   Escribiendo objetos:  20% (24/116)   Escribiendo objetos:  21% (25/116)   Escribiendo objetos:  22% (26/116)   Escribiendo objetos:  23% (27/116)   Escribiendo objetos:  24% (28/116)   Escribiendo objetos:  25% (29/116)   Escribiendo objetos:  26% (31/116)   Escribiendo objetos:  27% (32/116)   Escribiendo objetos:  28% (33/116)   Escribiendo objetos:  29% (34/116)   Escribiendo objetos:  30% (35/116)   Escribiendo objetos:  31% (36/116)   Escribiendo objetos:  32% (38/116)   Escribiendo objetos:  33% (39/116)   Escribiendo objetos:  34% (40/116)   Escribiendo objetos:  35% (41/116)   Escribiendo objetos:  36% (42/116)   Escribiendo objetos:  37% (43/116)   Escribiendo objetos:  38% (45/116)   Escribiendo objetos:  39% (46/116)   Escribiendo objetos:  41% (48/116)   Escribiendo objetos:  42% (49/116)   Escribiendo objetos:  43% (51/116)   Escribiendo objetos:  44% (52/116)   Escribiendo objetos:  46% (54/116)   Escribiendo objetos:  47% (55/116)   Escribiendo objetos:  48% (56/116)   Escribiendo objetos:  49% (57/116)   Escribiendo objetos:  50% (58/116)   Escribiendo objetos:  51% (60/116)   Escribiendo objetos:  52% (61/116)   Escribiendo objetos:  53% (62/116)   Escribiendo objetos:  54% (63/116)   Escribiendo objetos:  55% (64/116)   Escribiendo objetos:  56% (65/116)   Escribiendo objetos:  57% (67/116)   Escribiendo objetos:  58% (68/116)   Escribiendo objetos:  59% (69/116)   Escribiendo objetos:  60% (70/116)   Escribiendo objetos:  61% (71/116)   Escribiendo objetos:  62% (72/116)   Escribiendo objetos:  63% (74/116)   Escribiendo objetos:  64% (75/116)   Escribiendo objetos:  65% (76/116)   Escribiendo objetos:  66% (77/116)   Escribiendo objetos:  67% (78/116)   Escribiendo objetos:  68% (79/116)   Escribiendo objetos:  69% (81/116)   Escribiendo objetos:  70% (82/116)   Escribiendo objetos:  70% (82/116), 1.05 MiB | 581.00 KiB/s   Escribiendo objetos:  71% (83/116), 1.05 MiB | 581.00 KiB/s   Escribiendo objetos:  72% (84/116), 1.48 MiB | 632.00 KiB/s   Escribiendo objetos:  73% (85/116), 1.48 MiB | 632.00 KiB/s   Escribiendo objetos:  73% (85/116), 1.86 MiB | 639.00 KiB/s   Escribiendo objetos:  73% (85/116), 2.73 MiB | 694.00 KiB/s   Escribiendo objetos:  73% (85/116), 3.67 MiB | 736.00 KiB/s   Escribiendo objetos:  74% (86/116), 4.17 MiB | 759.00 KiB/s   Escribiendo objetos:  75% (87/116), 4.17 MiB | 759.00 KiB/s   Escribiendo objetos:  76% (89/116), 4.17 MiB | 759.00 KiB/s   Escribiendo objetos:  76% (89/116), 4.66 MiB | 775.00 KiB/s   Escribiendo objetos:  76% (89/116), 5.66 MiB | 888.00 KiB/s   Escribiendo objetos:  77% (90/116), 5.66 MiB | 888.00 KiB/s   Escribiendo objetos:  78% (91/116), 5.66 MiB | 888.00 KiB/s   Escribiendo objetos:  78% (91/116), 6.55 MiB | 925.00 KiB/s   Escribiendo objetos:  78% (91/116), 7.48 MiB | 917.00 KiB/s   Escribiendo objetos:  78% (91/116), 8.35 MiB | 894.00 KiB/s   Escribiendo objetos:  79% (92/116), 8.35 MiB | 894.00 KiB/s   Escribiendo objetos:  79% (92/116), 9.34 MiB | 893.00 KiB/s   Escribiendo objetos:  79% (92/116), 9.84 MiB | 877.00 KiB/s   Escribiendo objetos:  79% (92/116), 10.59 MiB | 828.00 KiB/s   Escribiendo objetos:  80% (93/116), 10.91 MiB | 792.00 KiB/s   Escribiendo objetos:  80% (93/116), 11.28 MiB | 779.00 KiB/s   Escribiendo objetos:  81% (94/116), 11.28 MiB | 779.00 KiB/s   Escribiendo objetos:  82% (96/116), 11.28 MiB | 779.00 KiB/s   Escribiendo objetos:  83% (97/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  84% (98/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  85% (99/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  86% (100/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  87% (101/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  88% (103/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  89% (104/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  90% (105/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  91% (106/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  92% (107/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  93% (108/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  94% (110/116), 11.59 MiB | 757.00 KiB/s   Escribiendo objetos:  94% (110/116), 11.65 MiB | 584.00 KiB/s   Escribiendo objetos:  94% (110/116), 12.30 MiB | 528.00 KiB/s   Escribiendo objetos:  94% (110/116), 13.05 MiB | 503.00 KiB/s   Escribiendo objetos:  94% (110/116), 13.80 MiB | 531.00 KiB/s   Escribiendo objetos:  94% (110/116), 14.68 MiB | 571.00 KiB/s   Escribiendo objetos:  94% (110/116), 15.49 MiB | 754.00 KiB/s   Escribiendo objetos:  94% (110/116), 15.86 MiB | 768.00 KiB/s   Escribiendo objetos:  94% (110/116), 16.55 MiB | 751.00 KiB/s   Escribiendo objetos:  94% (110/116), 17.30 MiB | 752.00 KiB/s   Escribiendo objetos:  94% (110/116), 18.05 MiB | 725.00 KiB/s   Escribiendo objetos:  94% (110/116), 18.87 MiB | 712.00 KiB/s   Escribiendo objetos:  94% (110/116), 19.49 MiB | 678.00 KiB/s   Escribiendo objetos:  94% (110/116), 19.80 MiB | 663.00 KiB/s   Escribiendo objetos:  94% (110/116), 20.37 MiB | 618.00 KiB/s   Escribiendo objetos:  94% (110/116), 21.05 MiB | 598.00 KiB/s   Escribiendo objetos:  94% (110/116), 21.80 MiB | 587.00 KiB/s   Escribiendo objetos:  95% (111/116), 21.80 MiB | 587.00 KiB/s   Escribiendo objetos:  95% (111/116), 22.54 MiB | 618.00 KiB/s   Escribiendo objetos:  96% (112/116), 22.54 MiB | 618.00 KiB/s   Escribiendo objetos:  97% (113/116), 22.54 MiB | 618.00 KiB/s   Escribiendo objetos:  98% (114/116), 22.54 MiB | 618.00 KiB/s   Escribiendo objetos:  99% (115/116), 22.54 MiB | 618.00 KiB/s   Escribiendo objetos: 100% (116/116), 22.93 MiB | 643.00 KiB/s   Escribiendo objetos: 100% (116/116), 23.14 MiB | 710.00 KiB/s, listo.
+Total 116 (delta 13), reused 0 (delta 0)
+remote: Resolving deltas:   0% (0/13)   [Kremote: Resolving deltas:   7% (1/13)   [Kremote: Resolving deltas:  15% (2/13)   [Kremote: Resolving deltas:  38% (5/13)   [Kremote: Resolving deltas:  46% (6/13)   [Kremote: Resolving deltas:  53% (7/13)   [Kremote: Resolving deltas:  61% (8/13)   [Kremote: Resolving deltas:  69% (9/13)   [Kremote: Resolving deltas:  84% (11/13)   [Kremote: Resolving deltas: 100% (13/13)   [Kremote: Resolving deltas: 100% (13/13), done.[K
+remote: 
+remote: Create a pull request for 'master' on GitHub by visiting:[K
+remote:      https://github.com/luispitta/trabajo-especial-de-grado/pull/new/master[K
+remote: 
+To https://github.com/luispitta/trabajo-especial-de-grado.git
+ * [new branch]      master -> master
+Rama 'master' configurada para hacer seguimiento a la rama remota 'master' de 'origin'.
+git brac[Knch
+[?1h=* [32mmaster[m[m
+[K[?1l>]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git as[Kdd.
+git: 'add.'no es un comando de git. Mira 'git --help'.
+
+El comando mas similar es
+	add
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git add.[K 
+Nada especificado, nada agregado.
+Tal vez quiso decir 'git add .'?
+]0;/home/lpitta/Escritorio/Trabajo Especial de Grado]0;lpitta@lpitta-VIT-P2412: ~/Escritorio/Trabajo Especial de Grado[01;32mlpitta@lpitta-VIT-P2412[00m:[01;34m~/Escritorio/Trabajo Especial de Grado[00m$ git add .

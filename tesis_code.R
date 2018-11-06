@@ -1,8 +1,9 @@
 library(xlsx)
+library(plyr)
 library(tidyquant)
 library(janitor)
 library(plotly)
-
+library(lattice)
 insured <- read_csv('data/insured.csv')
 
 
@@ -12,7 +13,7 @@ insured <- insured %>% clean_names()
 
 insured <- 
  insured %>% 
-  rename(policy_id                 = idepol,
+  dplyr::rename(policy_id                 = idepol,
          product_code              = codprod,
          product_description       = descprod,
          emision_ofice_code        = codofiemi,
@@ -44,7 +45,7 @@ insured <-
          client_id                 = numid,
          driver_id                 = dvid,
          gender                    = sexo,
-         brith_date                = fecnac,
+         birth_date                = fecnac,
          marital_stage             = edocivil,
          risk_zone                 =  zonas,
          region                    = region
@@ -57,9 +58,10 @@ insured <-
            lubridate::as_date(cancellation_date, tz = 'UTC', format = '%d/%m/%Y'), 
          receipt_date = 
            lubridate::as_date(receipt_date,      tz = 'UTC', format = '%d/%m/%Y'), 
-         brith_date = 
-           lubridate::as_date(brith_date,        tz = 'UTC', format = '%d/%m/%Y')
-  )
+         birth_date = 
+           lubridate::as_date(birth_date,        tz = 'UTC', format = '%d/%m/%Y')
+  ) %>% 
+  filter (client_id_type != 'J')
 
 insured <- 
   insured %>% 
@@ -74,7 +76,7 @@ insured <-
            vehicle_year,
            version_description,
            license_plate,
-           brith_date,
+           birth_date,
            marital_stage,
            premiun,
            sum_assured,
@@ -91,7 +93,7 @@ pending_claims <- pending_claims %>% clean_names()
 
 pending_claims <- 
   pending_claims %>%
-    rename(branch_code = codarea,
+    dplyr::rename(branch_code = codarea,
            branch_desc = descarea,
            product_description       = descprod,
            policy_number             = numpol,
@@ -147,7 +149,7 @@ pending_claims_summary <-
     filter(between(claim_date,study_period_start_date,study_period_end_date)) %>% 
     select(policy_id, claim_total_amount) %>% 
     group_by(policy_id) %>% 
-    summarise(claim_frequency = n(), claim_amount = sum(claim_total_amount)) %>% 
+    dplyr::summarize(claim_frequency = n() , claim_amount = sum(claim_total_amount)) %>% 
     arrange(-claim_frequency) %>% 
     mutate(payment_status = 'pending')
 
@@ -158,7 +160,7 @@ paid_claims <- paid_claims %>% clean_names()
 
 paid_claims <- 
   paid_claims %>%
-    rename(area_description = descarea,
+    dplyr::rename(area_description = descarea,
            product_description = descprod,
            emision_ofice_description = pr_busca_lval_oficinas_p_codofiemi,
            reception_ofice_description = pr_busca_lval_oficinas_s_codofirecep,
@@ -223,7 +225,7 @@ paid_claims_summary <-
     filter(between(claim_date,study_period_start_date,study_period_end_date)) %>% 
     select(policy_id, claim_amount) %>% 
     group_by(policy_id) %>% 
-    summarise(claim_frequency = n(), claim_amount = sum(claim_amount)) %>% 
+    dplyr::summarise(claim_frequency = n(), claim_amount = sum(claim_amount)) %>% 
     arrange(-claim_frequency) %>% 
     mutate(payment_status = 'paid')
 
@@ -265,8 +267,7 @@ insured %>%
              effective_date,
              expiration_date,
              cancellation_date,
-             study_perilibrary(plotly)
-od_start_date,
+             study_period_start_date,
              study_period_end_date
            ),
            function(effective_date,
@@ -287,20 +288,36 @@ od_start_date,
   select(-ends_with('_'))
   } 
 
-insurance_exposed <- study_period_risk_exposed(insured,'2014-01-01','2014-12-31')
+insured_exposed <- study_period_risk_exposed(insured,'2014-01-01','2014-12-31')
   
   
 total_claims <- bind_rows(paid_claims_summary, pending_claims_summary)
 
-insurance_exposed <- left_join(insurance_exposed, total_claims, by = 'policy_id')
+insured_exposed <- left_join(insured_exposed, total_claims, by = 'policy_id')
 
-insurance_exposed <- insurance_exposed %>% mutate(claim_frequency = replace_na(claim_frequency,0))
+insured_exposed <- insured_exposed %>% mutate(claim_frequency = replace_na(claim_frequency,0))
 
 ## Plot claim frequency
 
-insurance_exposed %>%
-  ggplot(aes(x = claim_frequency)) + 
+ 
+  ggplot(insured_exposed,aes(x = claim_frequency)) + 
   geom_histogram(fill = "blue", alpha = 0.2)
 
-    
+
+library(pander)
+pander(head(insured_exposed,10))
+
+
+
+
+insured_exposed %>%
+  plot_ly(x = ~claim_amount, type = "histogram") %>% 
+  layout(title = 'Monto Total de los Siniestros',
+         xaxis = list(title = 'Monto del Siniestro'),
+         yaxis = list(title = 'Frecuencia')
+  )
+
+library(TDboost)
+library(HDtweedie)
   
+DATA
